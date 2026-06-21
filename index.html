@@ -1,0 +1,2708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeBase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--bg2:#161b26;--bg3:#1e2636;--bg4:#252d3d;
+  --border:#2a3347;--border2:#35405a;
+  --text:#e8eaf0;--text2:#9aa3b8;--text3:#5c6580;
+  --accent:#4f7ef8;--accent2:#3b5fc0;
+  --green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --purple:#a78bfa;--teal:#14b8a6;--pink:#ec4899;
+  --sidebar:240px;--header:56px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;overflow-x:hidden}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100}
+.brand{padding:0 16px;height:var(--header);display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.brand-icon{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0}
+.brand-name{font-size:14px;font-weight:600;color:var(--text)}
+.brand-sub{font-size:10px;color:var(--text3)}
+.nav-section{padding:12px 0;flex:1;overflow-y:auto}
+.nav-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:6px 16px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 16px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:400;border:none;background:none;width:100%;text-align:left;position:relative;transition:background .15s}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--bg4);color:var(--text);font-weight:500}
+.nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
+.nav-item i{font-size:17px;width:20px;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:10px}
+.nav-badge.amber{background:var(--amber);color:#000}
+.nav-badge.red{background:var(--red);color:#fff}
+.sidebar-footer{border-top:1px solid var(--border);padding:12px}
+.user-card{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:background .15s}
+.user-card:hover{background:var(--bg3)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500;color:var(--text)}
+.user-role{font-size:11px;color:var(--text3)}
+.settings-link{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:13px;transition:background .15s;margin-top:4px}
+.settings-link:hover{background:var(--bg3);color:var(--text)}
+
+/* MAIN */
+#main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+#topbar{height:var(--header);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:15px;font-weight:600;color:var(--text);flex:1}
+.topbar-search{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;width:260px}
+.topbar-search input{background:none;border:none;outline:none;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;width:100%}
+.topbar-search input::placeholder{color:var(--text3)}
+.topbar-search i{color:var(--text3);font-size:15px}
+.topbar-btn{width:34px;height:34px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .15s;position:relative}
+.topbar-btn:hover{background:var(--bg4);color:var(--text)}
+.notif-dot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg2)}
+#content{padding:24px;flex:1}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:20px}
+.page-header h1{font-size:22px;font-weight:600;color:var(--text);margin-bottom:3px}
+
+/* TIMEZONE CLOCK WIDGET */
+.tz-clock-widget{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:12px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:160px}
+.tz-clock-time{font-size:24px;font-weight:700;color:var(--text);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.tz-clock-zone select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--accent);font-size:11px;font-weight:600;font-family:'Inter',sans-serif;outline:none;cursor:pointer}
+.page-header p{font-size:13px;color:var(--text2)}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);margin-bottom:6px}
+.breadcrumb span{color:var(--text2)}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:600;color:var(--text)}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .15s}
+.stat-card:hover{border-color:var(--border2)}
+.stat-filter-card:hover{border-color:var(--accent)}
+.cs-stat-filter:hover{border-color:var(--accent)}
+.stat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:10px}
+.stat-num{font-size:24px;font-weight:600;color:var(--text);line-height:1;margin-bottom:3px}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.stat-delta{font-size:11px;display:flex;align-items:center;gap:3px}
+.stat-delta.up{color:var(--green)}
+.stat-delta.down{color:var(--red)}
+.stat-delta.neutral{color:var(--text3)}
+
+/* TODAY STRIP */
+.today-strip{background:linear-gradient(135deg,#1a2340 0%,#1e2636 100%);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:flex;gap:0;overflow:hidden}
+.today-item{flex:1;padding:0 16px;border-right:1px solid var(--border);display:flex;align-items:flex-start;gap:10px}
+.today-item:first-child{padding-left:0}
+.today-item:last-child{border-right:none}
+.today-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.today-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.today-value{font-size:13px;font-weight:500;color:var(--text);line-height:1.4}
+.today-sub{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* BUSINESS HEALTH */
+.biz-health{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.biz-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s}
+.biz-card:hover{border-color:var(--border2)}
+.biz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.biz-name{font-size:13px;font-weight:500;color:var(--text)}
+.biz-dot{width:8px;height:8px;border-radius:50%}
+.biz-stats{display:flex;gap:10px}
+.biz-stat{font-size:11px;color:var(--text3)}
+.biz-stat strong{color:var(--text2);font-weight:500}
+.biz-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:8px;overflow:hidden}
+.biz-bar-fill{height:100%;border-radius:2px}
+
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:1fr 320px;gap:16px}
+
+/* ACTIVITY */
+.activity-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.act-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.act-text{font-size:13px;color:var(--text2);line-height:1.45}
+.act-text strong{color:var(--text);font-weight:500}
+.act-time{font-size:11px;color:var(--text3);margin-top:2px}
+.act-source{font-size:10px;background:var(--bg3);color:var(--text3);padding:1px 6px;border-radius:4px;margin-left:4px;vertical-align:middle}
+
+/* PIPELINE */
+.pipeline-stage{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.pipeline-stage:last-child{border-bottom:none}
+.stage-name{font-size:13px;color:var(--text2)}
+.stage-bar-wrap{flex:1;margin:0 12px;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.stage-bar{height:100%;border-radius:2px;background:var(--accent)}
+.stage-count{font-size:13px;font-weight:500;color:var(--text);min-width:20px;text-align:right}
+
+/* ACTIONS NEEDED */
+.action-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.action-item:last-child{border-bottom:none}
+.action-item:hover .action-title{color:var(--accent)}
+.action-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.action-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.action-desc{font-size:11px;color:var(--text3)}
+.action-badge{margin-left:auto;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500;white-space:nowrap;align-self:center}
+
+/* UPCOMING */
+.upcoming-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);align-items:center}
+.upcoming-item:last-child{border-bottom:none}
+.upcoming-date{width:36px;text-align:center;flex-shrink:0}
+.upcoming-day{font-size:18px;font-weight:600;color:var(--text);line-height:1}
+.upcoming-mon{font-size:10px;color:var(--text3);text-transform:uppercase}
+.upcoming-info{flex:1}
+.upcoming-title{font-size:13px;font-weight:500;color:var(--text)}
+.upcoming-sub{font-size:11px;color:var(--text3);margin-top:1px}
+
+/* SYNC STATUS */
+.sync-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.sync-row:last-child{border-bottom:none}
+.sync-label{color:var(--text2);display:flex;align-items:center;gap:6px}
+.sync-val{color:var(--text3);font-size:12px}
+.pulse{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-blue{background:rgba(79,126,248,.15);color:#7aa4fa}
+.badge-green{background:rgba(34,197,94,.12);color:#4ade80}
+.badge-amber{background:rgba(245,158,11,.12);color:#fbbf24}
+.badge-red{background:rgba(239,68,68,.12);color:#f87171}
+.badge-purple{background:rgba(167,139,250,.12);color:#c4b5fd}
+.badge-gray{background:rgba(156,163,184,.1);color:#9aa3b8}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:'Inter',sans-serif}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg3);color:var(--text)}
+.btn-sm{padding:5px 10px;font-size:12px}
+
+/* VIEWS */
+.view{display:none}.view.active{display:block}
+
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kan-col{background:var(--bg3);border-radius:10px;padding:12px}
+.kan-col-head{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;display:flex;justify-content:space-between}
+.kan-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.kan-card-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px}
+.kan-card-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.quick-add{background:var(--bg3);border:1px dashed var(--border2);border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--text3);font-size:12px;width:100%;font-family:'Inter',sans-serif;transition:all .15s}
+.quick-add:hover{color:var(--text);border-color:var(--accent)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+.td-main{color:var(--text);font-weight:500}
+
+/* CALENDAR */
+.cal-scroll-wrap{overflow-x:auto;overflow-y:auto;max-height:70vh;scrollbar-width:auto}
+.cal-scroll-wrap::-webkit-scrollbar{height:10px;width:10px}
+.cal-scroll-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:5px}
+.cal-scroll-wrap::-webkit-scrollbar-track{background:var(--bg3)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(140px,1fr));gap:1px;background:var(--border);min-width:980px}
+
+/* date-row list calendar */
+.cal-row{display:flex;border-bottom:1px solid var(--border)}
+.cal-row:last-child{border-bottom:none}
+.cal-row:hover{background:var(--bg3)}
+.cal-row.is-today{background:rgba(79,126,248,.06)}
+.cal-row-date{width:90px;flex-shrink:0;padding:14px 16px;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.cal-row-daynum{font-size:20px;font-weight:600;color:var(--text)}
+.cal-row-dayname{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.cal-row-today-badge{font-size:9px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;margin-top:4px}
+.cal-row-items{flex:1;padding:10px 16px;display:flex;flex-direction:column;gap:6px}
+.cal-row-empty{color:var(--text3);font-size:12px;font-style:italic;padding:4px 0}
+.cal-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);border-radius:8px;cursor:pointer;transition:background .15s;border-left:3px solid var(--accent)}
+.cal-item:hover{background:var(--bg4)}
+.cal-item-time{font-size:11px;color:var(--text3);min-width:54px;flex-shrink:0}
+.cal-item-title{font-size:13px;color:var(--text);font-weight:500;flex:1}
+.cal-item-tags{display:flex;gap:6px;flex-shrink:0}
+.cal-day-header{background:var(--bg3);padding:6px;text-align:center;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;position:sticky;top:0;z-index:5}
+.cal-day{background:var(--bg2);padding:8px;min-height:110px;max-width:100%;overflow:hidden;cursor:default;transition:background .1s}
+.cal-day:hover{background:var(--bg3)}
+.cal-day.other-month{opacity:.3}
+.cal-day.today .cal-date{background:var(--accent);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.cal-date{font-size:12px;color:var(--text2);margin-bottom:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.cal-event{font-size:10px;padding:2px 5px;border-radius:3px;margin-bottom:2px;white-space:normal;overflow-wrap:break-word;word-break:break-word;line-height:1.3}
+.cal-event.blue{background:rgba(79,126,248,.2);color:#7aa4fa}
+.cal-event.green{background:rgba(34,197,94,.15);color:#4ade80}
+.cal-event.amber{background:rgba(245,158,11,.15);color:#fbbf24}
+.cal-event.purple{background:rgba(167,139,250,.15);color:#c4b5fd}
+
+/* PROFILE / SETTINGS */
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+.field input,.field select,.field textarea{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus{border-color:var(--accent)}
+.field select option{background:var(--bg3)}
+.profile-section{margin-bottom:20px}
+.profile-section h3{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* NOTES */
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.note-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:border-color .15s}
+.note-card:hover{border-color:var(--border2)}
+.note-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.note-preview{font-size:12px;color:var(--text3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.note-date{font-size:11px;color:var(--text3);margin-top:8px}
+
+/* PROGRESS */
+.progress{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:6px}
+.progress-bar{height:100%;border-radius:2px;background:var(--accent)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;width:480px;max-width:92vw;max-height:88vh;overflow-y:auto}
+.modal h2{font-size:16px;font-weight:600;color:var(--text);margin-bottom:18px}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+
+/* PAGE-LEVEL TABS */
+.page-tabs{display:flex;gap:2px;background:var(--bg3);border-radius:10px;padding:3px;margin-bottom:20px;width:fit-content}
+.page-tab{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s;border:none;background:none;font-family:'Inter',sans-serif}
+.page-tab.active{background:var(--bg2);color:var(--text);border:1px solid var(--border)}
+
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="brand">
+    <div class="brand-icon"><i class="ti ti-command"></i></div>
+    <div>
+      <div class="brand-name">HomeBase</div>
+      <div class="brand-sub">Operations Hub</div>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <button class="nav-item active" onclick="showView('home')"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
+    <button class="nav-item" onclick="showView('notes')"><i class="ti ti-notes"></i> Notes <span class="nav-badge amber">3</span></button>
+    <div class="nav-label" style="margin-top:8px">Work</div>
+    <button class="nav-item" onclick="showView('tasks')"><i class="ti ti-checkbox"></i> Task board <span class="nav-badge" id="nav-task-count">7</span></button>
+    <button class="nav-item" onclick="showView('scheduler')"><i class="ti ti-edit"></i> Content scheduler <span class="nav-badge amber" id="nav-draft-count">2</span></button>
+    <button class="nav-item" onclick="showView('calendar')"><i class="ti ti-calendar"></i> Content calendar</button>
+    <button class="nav-item" onclick="showView('projects')"><i class="ti ti-layout-kanban"></i> Project tracker</button>
+    <div class="nav-label" style="margin-top:8px">Outreach</div>
+    <button class="nav-item" onclick="showView('sessions')"><i class="ti ti-video"></i> Sessions & webinars</button>
+    <button class="nav-item" onclick="showView('email')"><i class="ti ti-mail"></i> Email campaigns</button>
+    <button class="nav-item" onclick="showView('social')"><i class="ti ti-brand-instagram"></i> Social media</button>
+    <div class="nav-label" style="margin-top:8px">Data</div>
+    <button class="nav-item" onclick="showView('pipeline')"><i class="ti ti-arrows-right-left"></i> Pipeline <span class="nav-badge red">2</span></button>
+    <button class="nav-item" onclick="showView('contacts')"><i class="ti ti-users"></i> Contacts</button>
+    <button class="nav-item" onclick="showView('businesses')"><i class="ti ti-building"></i> Businesses</button>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-card" onclick="showView('profile')">
+      <div class="avatar">AK</div>
+      <div><div class="user-name">Arif Khan</div><div class="user-role">Admin · GHL Manager</div></div>
+    </div>
+    <div class="settings-link" onclick="showView('settings')"><i class="ti ti-settings" style="font-size:16px"></i> Settings & integrations</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-search"><i class="ti ti-search"></i><input type="text" placeholder="Search contacts, tasks, campaigns…"></div>
+    <div class="topbar-btn" title="Notifications"><i class="ti ti-bell"></i><span class="notif-dot"></span></div>
+    <div class="topbar-btn" onclick="showView('profile')" title="Profile"><i class="ti ti-user"></i></div>
+  </div>
+
+  <div id="content">
+
+  <!-- ══ HOME ══ -->
+  <div id="view-home" class="view active">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Overview</span></div>
+      <h1 id="greeting">Good morning, Arif</h1>
+      <p style="color:var(--text2);font-size:13px" id="today-date"></p>
+    </div>
+
+    <!-- TODAY'S FOCUS STRIP -->
+    <div class="today-strip">
+      <div class="today-item">
+        <div class="today-dot" style="background:var(--red)"></div>
+        <div>
+          <div class="today-label">Needs attention now</div>
+          <div class="today-value">Update client proposal</div>
+          <div class="today-sub">Overdue · Sarah · Consulting Ltd</div>
+        </div>
+      </div>
+      <div class="today-item">
+        <div class="today-dot" style="background:var(--purple)"></div>
+        <div>
+          <div class="today-label">Next session</div>
+          <div class="today-value">Monthly Webinar — June</div>
+          <div class="today-sub">Jun 22 · 38 registered · Tech Startup</div>
+        </div>
+      </div>
+      <div class="today-item">
+        <div class="today-dot" style="background:var(--amber)"></div>
+        <div>
+          <div class="today-label">Campaign alert</div>
+          <div class="today-value">Listing Alerts — low open rate</div>
+          <div class="today-sub">41% opens · Real Estate · needs review</div>
+        </div>
+      </div>
+      <div class="today-item">
+        <div class="today-dot" style="background:var(--green)"></div>
+        <div>
+          <div class="today-label">GHL sync</div>
+          <div class="today-value">All systems connected</div>
+          <div class="today-sub">Last sync 2 min ago · 1,847 contacts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-grid">
+      <div class="stat-card" onclick="showView('tasks')">
+        <div class="stat-icon" style="background:rgba(79,126,248,.12);color:var(--accent)"><i class="ti ti-checkbox"></i></div>
+        <div class="stat-label">Open tasks</div>
+        <div class="stat-num" id="stat-tasks">24</div>
+        <div class="stat-delta up"><i class="ti ti-arrow-up" style="font-size:11px"></i> 3 overdue</div>
+      </div>
+      <div class="stat-card" onclick="showView('sessions')">
+        <div class="stat-icon" style="background:rgba(167,139,250,.12);color:var(--purple)"><i class="ti ti-video"></i></div>
+        <div class="stat-label">Upcoming sessions</div>
+        <div class="stat-num">3</div>
+        <div class="stat-delta neutral">Next: Jun 22</div>
+      </div>
+      <div class="stat-card" onclick="showView('email')">
+        <div class="stat-icon" style="background:rgba(20,184,166,.12);color:var(--teal)"><i class="ti ti-mail"></i></div>
+        <div class="stat-label">Active campaigns</div>
+        <div class="stat-num">12</div>
+        <div class="stat-delta up"><i class="ti ti-arrow-up" style="font-size:11px"></i> 68% avg opens</div>
+      </div>
+      <div class="stat-card" onclick="showView('contacts')">
+        <div class="stat-icon" style="background:rgba(245,158,11,.12);color:var(--amber)"><i class="ti ti-users"></i></div>
+        <div class="stat-label">Total contacts</div>
+        <div class="stat-num">1,847</div>
+        <div class="stat-delta up"><i class="ti ti-arrow-up" style="font-size:11px"></i> 43 this week</div>
+      </div>
+      <div class="stat-card" onclick="showView('pipeline')">
+        <div class="stat-icon" style="background:rgba(34,197,94,.12);color:var(--green)"><i class="ti ti-arrows-right-left"></i></div>
+        <div class="stat-label">Pipeline value</div>
+        <div class="stat-num">$48k</div>
+        <div class="stat-delta up"><i class="ti ti-arrow-up" style="font-size:11px"></i> 6 active deals</div>
+      </div>
+    </div>
+
+    <!-- BUSINESS HEALTH ROW -->
+    <div style="margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;font-weight:600;color:var(--text)">Business health</div>
+      <button class="btn btn-ghost btn-sm" onclick="showView('businesses')">View all</button>
+    </div>
+    <div class="biz-health" style="margin-bottom:18px">
+      <div class="biz-card">
+        <div class="biz-top"><div class="biz-name">Retail Co</div><div class="biz-dot" style="background:var(--green)" title="Healthy"></div></div>
+        <div class="biz-stats"><div class="biz-stat"><strong>234</strong> contacts</div><div class="biz-stat"><strong>2</strong> campaigns</div><div class="biz-stat"><strong>3</strong> tasks</div></div>
+        <div class="biz-bar"><div class="biz-bar-fill" style="width:63%;background:var(--green)"></div></div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-top"><div class="biz-name">Tech Startup</div><div class="biz-dot" style="background:var(--green)" title="Healthy"></div></div>
+        <div class="biz-stats"><div class="biz-stat"><strong>88</strong> contacts</div><div class="biz-stat"><strong>3</strong> campaigns</div><div class="biz-stat"><strong>2</strong> tasks</div></div>
+        <div class="biz-bar"><div class="biz-bar-fill" style="width:50%;background:var(--purple)"></div></div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-top"><div class="biz-name">E-commerce</div><div class="biz-dot" style="background:var(--amber)" title="Needs attention"></div></div>
+        <div class="biz-stats"><div class="biz-stat"><strong>156</strong> contacts</div><div class="biz-stat"><strong>2</strong> campaigns</div><div class="biz-stat"><strong>4</strong> tasks</div></div>
+        <div class="biz-bar"><div class="biz-bar-fill" style="width:35%;background:var(--amber)"></div></div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-top"><div class="biz-name">Real Estate</div><div class="biz-dot" style="background:var(--red)" title="Needs action"></div></div>
+        <div class="biz-stats"><div class="biz-stat"><strong>310</strong> contacts</div><div class="biz-stat"><strong>1</strong> campaign</div><div class="biz-stat"><strong>1</strong> task</div></div>
+        <div class="biz-bar"><div class="biz-bar-fill" style="width:18%;background:var(--red)"></div></div>
+      </div>
+    </div>
+
+    <!-- MAIN 2-COL GRID -->
+    <div class="main-grid">
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- RECENT ACTIVITY -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent activity</div>
+            <div style="display:flex;gap:6px">
+              <span style="font-size:11px;background:var(--bg3);padding:3px 8px;border-radius:6px;color:var(--text3)">Live</span>
+              <button class="btn btn-ghost btn-sm">View all</button>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot" style="background:var(--green)"></div>
+            <div><div class="act-text">Sarah registered for <strong>June Monthly Webinar</strong> <span class="act-source">GHL webhook</span></div><div class="act-time">2 minutes ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot" style="background:var(--accent)"></div>
+            <div><div class="act-text">Email campaign <strong>Retail Co — June Promo</strong> sent to 234 contacts</div><div class="act-time">18 minutes ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot" style="background:var(--red)"></div>
+            <div><div class="act-text">Task <strong>Update client proposal</strong> is now overdue <span class="act-source">Auto</span></div><div class="act-time">1 hour ago · Assigned to Sarah</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot" style="background:var(--purple)"></div>
+            <div><div class="act-text">5 contacts added to <strong>Tech Startup — Onboarding</strong> sequence <span class="act-source">GHL</span></div><div class="act-time">3 hours ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot" style="background:var(--amber)"></div>
+            <div><div class="act-text">Deal <strong>Gulshan Apartment — David Chen</strong> moved to Proposal</div><div class="act-time">Yesterday, 4:30 PM</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot" style="background:var(--teal)"></div>
+            <div><div class="act-text">James completed task <strong>Fix checkout bug</strong></div><div class="act-time">Yesterday, 5:42 PM</div></div>
+          </div>
+        </div>
+
+        <!-- PIPELINE SNAPSHOT -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Pipeline snapshot</div>
+            <button class="btn btn-ghost btn-sm" onclick="showView('pipeline')">Full pipeline</button>
+          </div>
+          <div class="pipeline-stage">
+            <div class="stage-name">New lead</div>
+            <div class="stage-bar-wrap"><div class="stage-bar" style="width:80%;background:var(--accent)"></div></div>
+            <div class="stage-count">8</div>
+          </div>
+          <div class="pipeline-stage">
+            <div class="stage-name">Contacted</div>
+            <div class="stage-bar-wrap"><div class="stage-bar" style="width:60%;background:var(--purple)"></div></div>
+            <div class="stage-count">6</div>
+          </div>
+          <div class="pipeline-stage">
+            <div class="stage-name">Proposal sent</div>
+            <div class="stage-bar-wrap"><div class="stage-bar" style="width:30%;background:var(--amber)"></div></div>
+            <div class="stage-count">3</div>
+          </div>
+          <div class="pipeline-stage">
+            <div class="stage-name">Negotiation</div>
+            <div class="stage-bar-wrap"><div class="stage-bar" style="width:20%;background:var(--teal)"></div></div>
+            <div class="stage-count">2</div>
+          </div>
+          <div class="pipeline-stage">
+            <div class="stage-name">Won</div>
+            <div class="stage-bar-wrap"><div class="stage-bar" style="width:50%;background:var(--green)"></div></div>
+            <div class="stage-count">5</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- NEEDS ACTION -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Needs action</div>
+            <span class="badge badge-red">4 items</span>
+          </div>
+          <div class="action-item" onclick="showView('tasks')">
+            <div class="action-icon" style="background:rgba(239,68,68,.12);color:var(--red)"><i class="ti ti-clock"></i></div>
+            <div><div class="action-title">3 overdue tasks</div><div class="action-desc">Including client proposal — 2 days late</div></div>
+            <div class="action-badge badge badge-red">Urgent</div>
+          </div>
+          <div class="action-item" onclick="showView('sessions')">
+            <div class="action-icon" style="background:rgba(167,139,250,.12);color:var(--purple)"><i class="ti ti-video"></i></div>
+            <div><div class="action-title">Webinar attendance unmarked</div><div class="action-desc">May session — 51 registrants pending</div></div>
+            <div class="action-badge badge badge-amber">Review</div>
+          </div>
+          <div class="action-item" onclick="showView('email')">
+            <div class="action-icon" style="background:rgba(245,158,11,.12);color:var(--amber)"><i class="ti ti-mail"></i></div>
+            <div><div class="action-title">Campaign open rate low</div><div class="action-desc">Listing Alerts — 41% (target: 55%)</div></div>
+            <div class="action-badge badge badge-amber">Review</div>
+          </div>
+          <div class="action-item" onclick="showView('social')">
+            <div class="action-icon" style="background:rgba(20,184,166,.12);color:var(--teal)"><i class="ti ti-brand-instagram"></i></div>
+            <div><div class="action-title">Post needs approval</div><div class="action-desc">LinkedIn — Webinar reminder for Jun 21</div></div>
+            <div class="action-badge badge badge-blue">Pending</div>
+          </div>
+        </div>
+
+        <!-- UPCOMING THIS WEEK -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Upcoming this week</div>
+          </div>
+          <div class="upcoming-item">
+            <div class="upcoming-date"><div class="upcoming-day">20</div><div class="upcoming-mon">Jun</div></div>
+            <div class="upcoming-info"><div class="upcoming-title">Email follow-up sequence</div><div class="upcoming-sub">E-commerce · Cart abandonment</div></div>
+            <span class="badge badge-blue">Auto</span>
+          </div>
+          <div class="upcoming-item">
+            <div class="upcoming-date"><div class="upcoming-day">21</div><div class="upcoming-mon">Jun</div></div>
+            <div class="upcoming-info"><div class="upcoming-title">LinkedIn post — webinar reminder</div><div class="upcoming-sub">Tech Startup · needs approval</div></div>
+            <span class="badge badge-amber">Pending</span>
+          </div>
+          <div class="upcoming-item">
+            <div class="upcoming-date"><div class="upcoming-day">22</div><div class="upcoming-mon">Jun</div></div>
+            <div class="upcoming-info"><div class="upcoming-title">Monthly Webinar — June</div><div class="upcoming-sub">Tech Startup · 38 registered</div></div>
+            <span class="badge badge-purple">Session</span>
+          </div>
+          <div class="upcoming-item">
+            <div class="upcoming-date"><div class="upcoming-day">24</div><div class="upcoming-mon">Jun</div></div>
+            <div class="upcoming-info"><div class="upcoming-title">Email: Real Estate listings</div><div class="upcoming-sub">Real Estate · 310 contacts</div></div>
+            <span class="badge badge-blue">Auto</span>
+          </div>
+        </div>
+
+        <!-- GHL SYNC STATUS -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">System status</div>
+          </div>
+          <div class="sync-row">
+            <div class="sync-label"><div class="pulse" style="background:var(--green)"></div> GHL webhook</div>
+            <div class="sync-val">2 min ago</div>
+          </div>
+          <div class="sync-row">
+            <div class="sync-label"><div class="pulse" style="background:var(--green)"></div> Google Sheet</div>
+            <div class="sync-val">Connected</div>
+          </div>
+          <div class="sync-row">
+            <div class="sync-label"><div class="pulse" style="background:var(--amber)"></div> Zoom</div>
+            <div class="sync-val">Manual import</div>
+          </div>
+          <div class="sync-row">
+            <div class="sync-label"><div class="pulse" style="background:var(--text3)"></div> GHL API</div>
+            <div class="sync-val">Not configured</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:10px;width:100%;justify-content:center" onclick="showView('settings')"><i class="ti ti-settings"></i> Configure</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TASKS ══ -->
+  <div id="view-tasks" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Task board</span></div>
+      <h1>Task board</h1><p>Manage tasks across all your businesses and team members.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px">
+      <div class="card stat-filter-card active" id="sf-all" onclick="setStatusFilter('')" style="padding:14px 16px;cursor:pointer;border-color:var(--accent)"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Total tasks</div><div style="font-size:24px;font-weight:600" id="task-stat-total">0</div></div>
+      <div class="card stat-filter-card" id="sf-pending" onclick="setStatusFilter('Pending')" style="padding:14px 16px;cursor:pointer"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Pending</div><div style="font-size:24px;font-weight:600;color:var(--amber)" id="task-stat-pending">0</div></div>
+      <div class="card stat-filter-card" id="sf-progress" onclick="setStatusFilter('In progress')" style="padding:14px 16px;cursor:pointer"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">In progress</div><div style="font-size:24px;font-weight:600;color:var(--purple)" id="task-stat-progress">0</div></div>
+      <div class="card stat-filter-card" id="sf-done" onclick="setStatusFilter('Done')" style="padding:14px 16px;cursor:pointer"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Completed</div><div style="font-size:24px;font-weight:600;color:var(--green)" id="task-stat-done">0</div></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-primary" onclick="openTaskModal()"><i class="ti ti-plus"></i> New task</button>
+      <input id="task-search" oninput="renderTasks()" placeholder="Search tasks…" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;width:180px">
+      <select id="task-filter-biz" onchange="renderTasks()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+      <select id="task-filter-prio" onchange="renderTasks()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif">
+        <option value="">All priorities</option><option>High</option><option>Medium</option><option>Low</option>
+      </select>
+      <select id="task-filter-assign" onchange="renderTasks()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+      <div class="page-tabs" style="margin-left:auto;margin-bottom:0">
+        <button class="page-tab" id="task-view-all" onclick="setTaskView('all')">All tasks</button>
+        <button class="page-tab active" id="task-view-board" onclick="setTaskView('board')">Board</button>
+      </div>
+    </div>
+    <div id="task-board-wrap"><div class="kanban" id="task-kanban"></div></div>
+    <div id="task-list-wrap" style="display:none"><div class="card" style="padding:0"><div class="table-wrap"><table><thead><tr><th></th><th>Task</th><th>Priority</th><th>Status</th><th>Business</th><th>Assignee</th><th>Created</th><th>Due</th><th>Done on</th><th></th></tr></thead><tbody id="task-list-body"></tbody></table></div></div></div>
+  </div>
+
+  <!-- ══ CONTENT SCHEDULER ══ -->
+  <div id="view-scheduler" class="view">
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px">
+      <div>
+        <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Content scheduler</span></div>
+        <h1>Content scheduler</h1><p>Draft your content first. When it's ready, finalize it and assign a calendar date — it'll appear automatically on the content calendar.</p>
+      </div>
+      <div class="tz-clock-widget">
+        <div class="tz-clock-time" id="tz-clock-time-sched">--:-- --</div>
+        <div class="tz-clock-zone">
+          <select id="tz-select-sched" onchange="onTzChange('sched')"></select>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px">
+      <div class="card cs-stat-filter" id="csf-draft" onclick="setContentStatusFilter('Draft')" style="padding:14px 16px;cursor:pointer"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Drafts</div><div style="font-size:24px;font-weight:600;color:var(--text3)" id="cs-stat-draft">0</div></div>
+      <div class="card cs-stat-filter" id="csf-scheduled" onclick="setContentStatusFilter('Scheduled')" style="padding:14px 16px;cursor:pointer"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Scheduled</div><div style="font-size:24px;font-weight:600;color:var(--accent)" id="cs-stat-scheduled">0</div></div>
+      <div class="card cs-stat-filter" id="csf-approval" onclick="setContentStatusFilter('Needs approval')" style="padding:14px 16px;cursor:pointer"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Needs approval</div><div style="font-size:24px;font-weight:600;color:var(--amber)" id="cs-stat-approval">0</div></div>
+      <div class="card cs-stat-filter" id="csf-published" onclick="setContentStatusFilter('Published')" style="padding:14px 16px;cursor:pointer"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Published</div><div style="font-size:24px;font-weight:600;color:var(--green)" id="cs-stat-published">0</div></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-primary" onclick="openContentModal()"><i class="ti ti-plus"></i> New content</button>
+      <select id="cs-filter-type" onchange="renderContent()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+      <select id="cs-filter-biz" onchange="renderContent()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+      <select id="cs-filter-month" onchange="renderContent()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+      <button class="btn btn-ghost btn-sm" onclick="resetContentFilters()"><i class="ti ti-filter-x"></i> Reset</button>
+      <div class="page-tabs" style="margin-left:auto;margin-bottom:0">
+        <button class="page-tab" id="cs-view-all" onclick="setContentView('all')">All content</button>
+        <button class="page-tab active" id="cs-view-board" onclick="setContentView('board')">Board</button>
+      </div>
+    </div>
+    <div id="content-board-wrap"><div class="kanban" id="content-kanban" style="grid-template-columns:repeat(4,1fr)"></div></div>
+    <div id="content-all-wrap" style="display:none"><div class="card" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Content</th><th>Type</th><th>Business</th><th>Status</th><th>Date</th><th>Time</th><th></th></tr></thead><tbody id="content-all-body"></tbody></table></div></div></div>
+  </div>
+
+  <!-- ══ CALENDAR ══ -->
+  <div id="view-calendar" class="view">
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px">
+      <div>
+        <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Content calendar</span></div>
+        <h1>Content calendar</h1><p>Every day of the month, with scheduled content stacked under each date.</p>
+      </div>
+      <div class="tz-clock-widget">
+        <div class="tz-clock-time" id="tz-clock-time-cal">--:-- --</div>
+        <div class="tz-clock-zone">
+          <select id="tz-select-cal" onchange="onTzChange('cal')"></select>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn btn-ghost btn-sm" onclick="calShiftMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+        <span style="font-size:15px;font-weight:600;min-width:130px;text-align:center" id="cal-month-label"></span>
+        <button class="btn btn-ghost btn-sm" onclick="calShiftMonth(1)"><i class="ti ti-chevron-right"></i></button>
+        <button class="btn btn-ghost btn-sm" onclick="calGoToday()">Today</button>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openContentModal()"><i class="ti ti-plus"></i> Add content</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <select id="cal-filter-biz" onchange="renderCalendar()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+      <select id="cal-filter-type" onchange="renderCalendar()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+      <button class="btn btn-ghost btn-sm" onclick="calResetFilters()"><i class="ti ti-filter-x"></i> Reset filters</button>
+      <span id="cal-filter-indicator" style="font-size:11px;color:var(--amber);display:none"><i class="ti ti-alert-circle" style="font-size:12px"></i> Filters active — some content may be hidden</span>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="cal-scroll-wrap">
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ SESSIONS ══ -->
+  <div id="view-sessions" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Sessions & webinars</span></div>
+      <h1>Sessions & webinars</h1><p>Track all webinars, Zoom calls, and recurring meetings. See who registered and who attended across every session.</p>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="btn btn-primary"><i class="ti ti-plus"></i> New session</button>
+      <button class="btn btn-ghost"><i class="ti ti-upload"></i> Import Zoom CSV</button>
+      <select style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"><option>All businesses</option><option>Retail Co</option><option>Tech Startup</option></select>
+      <select style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"><option>All types</option><option>Webinar</option><option>Weekly meeting</option><option>Zoom session</option></select>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Total sessions</div><div style="font-size:24px;font-weight:600">18</div></div>
+      <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Total registrants</div><div style="font-size:24px;font-weight:600">542</div></div>
+      <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Avg attendance</div><div style="font-size:24px;font-weight:600;color:var(--green)">61%</div></div>
+      <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Upcoming</div><div style="font-size:24px;font-weight:600;color:var(--purple)">3</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">All sessions</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Session name</th><th>Type</th><th>Date</th><th>Business</th><th>Registered</th><th>Attended</th><th>Rate</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="td-main">Monthly Webinar — June</td><td><span class="badge badge-purple">Webinar</span></td><td>Jun 22, 2026</td><td>Tech Startup</td><td>38</td><td>—</td><td>—</td><td><span class="badge badge-blue">Upcoming</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Weekly Team Meeting #24</td><td><span class="badge badge-blue">Weekly</span></td><td>Jun 17, 2026</td><td>All</td><td>12</td><td>10</td><td><span style="color:var(--green)">83%</span></td><td><span class="badge badge-green">Done</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Monthly Webinar — May</td><td><span class="badge badge-purple">Webinar</span></td><td>May 20, 2026</td><td>Tech Startup</td><td>51</td><td>—</td><td style="color:var(--amber)">Pending</td><td><span class="badge badge-amber">Mark attendance</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Monthly Webinar — April</td><td><span class="badge badge-purple">Webinar</span></td><td>Apr 22, 2026</td><td>Tech Startup</td><td>44</td><td>27</td><td><span style="color:var(--green)">61%</span></td><td><span class="badge badge-green">Done</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Retail Onboarding Zoom</td><td><span class="badge badge-teal" style="background:rgba(20,184,166,.12);color:#2dd4bf">Zoom</span></td><td>Apr 10, 2026</td><td>Retail Co</td><td>18</td><td>15</td><td><span style="color:var(--green)">83%</span></td><td><span class="badge badge-green">Done</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ EMAIL ══ -->
+  <div id="view-email" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Email campaigns</span></div>
+      <h1>Email campaigns</h1><p>All campaigns across every business. Filter, track stats, and see which contacts are in which sequence.</p>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="btn btn-primary"><i class="ti ti-plus"></i> New campaign</button>
+      <select style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"><option>All businesses</option><option>Retail Co</option><option>Tech Startup</option><option>Consulting Ltd</option><option>E-commerce</option><option>Real Estate</option></select>
+      <select style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"><option>All statuses</option><option>Active</option><option>Paused</option><option>Completed</option></select>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Active campaigns</div><div style="font-size:24px;font-weight:600">12</div></div>
+      <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Total sent</div><div style="font-size:24px;font-weight:600">8,421</div></div>
+      <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Avg open rate</div><div style="font-size:24px;font-weight:600;color:var(--green)">68%</div></div>
+      <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Avg click rate</div><div style="font-size:24px;font-weight:600">24%</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">All campaigns</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campaign</th><th>Business</th><th>Contacts</th><th>Emails</th><th>Open rate</th><th>Clicks</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="td-main">June Promo Sequence</td><td>Retail Co</td><td>234</td><td>3</td><td><span style="color:var(--green)">72%</span></td><td>31%</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Onboarding — SaaS</td><td>Tech Startup</td><td>88</td><td>5</td><td><span style="color:var(--green)">81%</span></td><td>44%</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Webinar Follow-up May</td><td>Tech Startup</td><td>31</td><td>2</td><td><span style="color:var(--amber)">58%</span></td><td>19%</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Cart Abandonment</td><td>E-commerce</td><td>156</td><td>4</td><td><span style="color:var(--green)">63%</span></td><td>28%</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Q1 Investor Update</td><td>Consulting Ltd</td><td>42</td><td>1</td><td><span style="color:var(--amber)">55%</span></td><td>12%</td><td><span class="badge badge-gray">Paused</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="td-main">Listing Alerts</td><td>Real Estate</td><td>310</td><td>8</td><td><span style="color:var(--red)">41%</span></td><td>9%</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SOCIAL ══ -->
+  <div id="view-social" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Social media</span></div>
+      <h1>Social media</h1><p>Scheduled posts, platform breakdown, and approval status across all businesses.</p>
+    </div>
+    <button class="btn btn-primary" style="margin-bottom:20px"><i class="ti ti-plus"></i> Schedule post</button>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Scheduled posts</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Content</th><th>Platform</th><th>Business</th><th>Scheduled</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="td-main">June sale announcement — 20% off all items</td><td><span class="badge badge-purple">Instagram</span></td><td>Retail Co</td><td>Jun 20, 10:00 AM</td><td><span class="badge badge-blue">Scheduled</span></td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+            <tr><td class="td-main">Webinar reminder — join us this Wednesday</td><td><span class="badge badge-blue">LinkedIn</span></td><td>Tech Startup</td><td>Jun 21, 9:00 AM</td><td><span class="badge badge-amber">Needs approval</span></td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+            <tr><td class="td-main">New listing in Gulshan — 3BR apartment</td><td><span class="badge badge-green">Facebook</span></td><td>Real Estate</td><td>Jun 22, 2:00 PM</td><td><span class="badge badge-blue">Scheduled</span></td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+            <tr><td class="td-main" style="opacity:.6;text-decoration:line-through">Weekend flash deal</td><td><span class="badge badge-purple">Instagram</span></td><td>E-commerce</td><td>Jun 15, 11:00 AM</td><td><span class="badge badge-green">Published</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PROJECTS ══ -->
+  <div id="view-projects" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Project tracker</span></div>
+      <h1>Project tracker</h1><p>Create and manage recurring webinars, meetups, and one-time campaigns — each with its own sessions, content, and attendance.</p>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-primary" onclick="openProjectModal()"><i class="ti ti-plus"></i> New project</button>
+      <select id="proj-filter-biz" onchange="renderProjects()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+      <select id="proj-filter-status" onchange="renderProjects()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif">
+        <option value="">All statuses</option><option>Active</option><option>Paused</option><option>At risk</option><option>Completed</option>
+      </select>
+    </div>
+    <div id="projects-list" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div>
+
+  <!-- ══ PROJECT DETAIL ══ -->
+  <div id="view-project-detail" class="view">
+    <div class="page-header">
+      <div class="breadcrumb"><a href="#" onclick="showView('projects');return false" style="color:var(--text3)">Project tracker</a> <i class="ti ti-chevron-right" style="font-size:11px"></i> <span id="pd-breadcrumb-name">Project</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div>
+          <h1 id="pd-title">Project name</h1>
+          <p id="pd-subtitle">Type · Business · Frequency</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="openProjectModal(currentProjectId)"><i class="ti ti-edit"></i> Edit project</button>
+          <button class="btn btn-ghost btn-sm" onclick="deleteProjectConfirm()" style="color:var(--red)"><i class="ti ti-trash"></i> Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px" id="pd-stats"></div>
+
+    <div class="page-tabs">
+      <button class="page-tab active" id="pd-tab-sessions" onclick="setProjectDetailTab('sessions')">Sessions</button>
+      <button class="page-tab" id="pd-tab-content" onclick="setProjectDetailTab('content')">Linked content</button>
+      <button class="page-tab" id="pd-tab-tasks" onclick="setProjectDetailTab('tasks')">Tasks</button>
+      <button class="page-tab" id="pd-tab-notes" onclick="setProjectDetailTab('notes')">Notes</button>
+    </div>
+
+    <div id="pd-panel-sessions">
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="btn btn-primary btn-sm" onclick="openSessionModal()"><i class="ti ti-plus"></i> Add session</button>
+        <button class="btn btn-ghost btn-sm" onclick="openCrossSessionMatrix()"><i class="ti ti-table"></i> Cross-session attendance</button>
+      </div>
+      <div id="pd-sessions-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <div id="pd-panel-content" style="display:none">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Linked content</div></div>
+        <div id="pd-content-list" style="font-size:13px;color:var(--text3)"></div>
+      </div>
+    </div>
+
+    <div id="pd-panel-tasks" style="display:none">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Linked tasks</div></div>
+        <div id="pd-tasks-list" style="font-size:13px;color:var(--text3)"></div>
+      </div>
+    </div>
+
+    <div id="pd-panel-notes" style="display:none">
+      <div class="card">
+        <textarea id="pd-notes-text" rows="6" placeholder="Notes about this project — campaign goals, what's working, ideas for next session…" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;width:100%;resize:vertical" onblur="saveProjectNotes()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SESSION DETAIL ══ -->
+  <div id="view-session-detail" class="view">
+    <div class="page-header">
+      <div class="breadcrumb"><a href="#" onclick="showView('projects');return false" style="color:var(--text3)">Project tracker</a> <i class="ti ti-chevron-right" style="font-size:11px"></i> <a href="#" onclick="showView('project-detail');return false" style="color:var(--text3)" id="sd-breadcrumb-project">Project</a> <i class="ti ti-chevron-right" style="font-size:11px"></i> <span id="sd-breadcrumb-session">Session</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div>
+          <h1 id="sd-title">Session name</h1>
+          <p id="sd-subtitle">Date · Time</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="openAttendanceModal(currentSessionDetailId)"><i class="ti ti-users"></i> Edit attendance</button>
+          <button class="btn btn-ghost btn-sm" onclick="openSessionModal(currentSessionDetailId)"><i class="ti ti-edit"></i> Edit session</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px" id="sd-stats"></div>
+    <div class="card" style="padding:0">
+      <div class="card-header" style="padding:18px 20px 0"><div class="card-title">Registrants</div></div>
+      <div class="table-wrap" style="padding:0 0 10px">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Status</th></tr></thead>
+          <tbody id="sd-attendees-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PIPELINE ══ -->
+  <div id="view-pipeline" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Pipeline</span></div>
+      <h1>Pipeline</h1><p>GHL opportunity stages — all businesses in one view.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
+      <div style="background:var(--bg3);border-radius:10px;padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;display:flex;justify-content:space-between"><span>New lead</span><span>8</span></div>
+        <div class="kan-card"><div class="kan-card-title">Sarah J. — Consulting</div><div style="font-size:11px;color:var(--text3);margin-top:4px">$2,400 · Jun 18</div></div>
+        <div class="kan-card"><div class="kan-card-title">David C. — Real Estate</div><div style="font-size:11px;color:var(--text3);margin-top:4px">$8,500 · Jun 19</div></div>
+      </div>
+      <div style="background:var(--bg3);border-radius:10px;padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;display:flex;justify-content:space-between"><span>Contacted</span><span>6</span></div>
+        <div class="kan-card"><div class="kan-card-title">Nadia R. — Retail Co</div><div style="font-size:11px;color:var(--text3);margin-top:4px">$1,200 · Jun 15</div></div>
+      </div>
+      <div style="background:var(--bg3);border-radius:10px;padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;display:flex;justify-content:space-between"><span>Proposal</span><span>3</span></div>
+        <div class="kan-card"><div class="kan-card-title">James O. — Tech</div><div style="font-size:11px;color:var(--amber);margin-top:4px">$5,000 · Follow up needed</div></div>
+      </div>
+      <div style="background:var(--bg3);border-radius:10px;padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;display:flex;justify-content:space-between"><span>Negotiation</span><span>2</span></div>
+        <div class="kan-card"><div class="kan-card-title">Tech Startup deal</div><div style="font-size:11px;color:var(--text3);margin-top:4px">$12,000 · Jun 10</div></div>
+      </div>
+      <div style="background:var(--bg3);border-radius:10px;padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:10px;display:flex;justify-content:space-between"><span>Won</span><span>5</span></div>
+        <div class="kan-card"><div class="kan-card-title">Retail Co — June</div><div style="font-size:11px;color:var(--green);margin-top:4px">$3,200 · Closed</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTACTS ══ -->
+  <div id="view-contacts" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Contacts</span></div>
+      <h1>Contacts</h1><p>Every contact, with their full attendance history across every session — the cross-session view GHL doesn't give you.</p>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="openContactModal()"><i class="ti ti-user-plus"></i> Add contact</button>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;flex:1;max-width:280px"><i class="ti ti-search" style="color:var(--text3)"></i><input id="contact-search" oninput="renderContacts()" style="background:none;border:none;outline:none;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;width:100%" placeholder="Search by name, email, tag…"></div>
+      <select id="contact-filter-biz" onchange="renderContacts()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif"></select>
+    </div>
+    <div class="card" style="padding:0">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Business</th><th>Tags</th><th>Sessions attended</th><th>GHL sync</th></tr></thead>
+          <tbody id="contacts-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTACT DETAIL ══ -->
+  <div id="view-contact-detail" class="view">
+    <div class="page-header">
+      <div class="breadcrumb"><a href="#" onclick="showView('contacts');return false" style="color:var(--text3)">Contacts</a> <i class="ti ti-chevron-right" style="font-size:11px"></i> <span id="cd-breadcrumb-name">Contact</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div>
+          <h1 id="cd-title">Contact name</h1>
+          <p id="cd-subtitle">Email · Business</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="openContactModal(currentContactId)"><i class="ti ti-edit"></i> Edit</button>
+          <button class="btn btn-ghost btn-sm" onclick="deleteContactConfirm()" style="color:var(--red)"><i class="ti ti-trash"></i> Delete</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px" id="cd-stats"></div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Tags</div></div>
+      <div id="cd-tags" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-header"><div class="card-title">Session attendance history</div></div>
+      <div id="cd-sessions-table"></div>
+    </div>
+  </div>
+
+  <!-- ══ CROSS-SESSION MATRIX ══ -->
+  <div id="view-cross-session" class="view">
+    <div class="page-header">
+      <div class="breadcrumb"><a href="#" onclick="showView('project-detail');return false" style="color:var(--text3)">Project tracker</a> <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Cross-session attendance</span></div>
+      <h1 id="csm-title">Cross-session attendance</h1><p>See who attended which session, month over month — the clear picture GHL can't show.</p>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="overflow-x:auto">
+        <table id="csm-table" style="white-space:nowrap"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BUSINESSES ══ -->
+  <div id="view-businesses" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Businesses</span></div>
+      <h1>Businesses</h1><p>Each business you manage — with linked contacts, campaigns, and tasks.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px">
+      <div class="card" style="cursor:pointer"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:36px;height:36px;background:rgba(79,126,248,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent)"><i class="ti ti-building"></i></div><div><div style="font-size:14px;font-weight:600;color:var(--text)">Retail Co</div><div style="font-size:11px;color:var(--text3)">Retail</div></div><div class="biz-dot" style="background:var(--green);margin-left:auto"></div></div><div style="font-size:12px;color:var(--text2)">234 contacts · 2 campaigns · 3 tasks</div><div class="progress" style="margin-top:8px"><div class="progress-bar" style="width:63%"></div></div></div>
+      <div class="card" style="cursor:pointer"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:36px;height:36px;background:rgba(167,139,250,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--purple)"><i class="ti ti-building"></i></div><div><div style="font-size:14px;font-weight:600;color:var(--text)">Tech Startup</div><div style="font-size:11px;color:var(--text3)">SaaS / Tech</div></div><div class="biz-dot" style="background:var(--green);margin-left:auto"></div></div><div style="font-size:12px;color:var(--text2)">88 contacts · 3 campaigns · 2 tasks</div><div class="progress" style="margin-top:8px"><div class="progress-bar" style="width:50%;background:var(--purple)"></div></div></div>
+      <div class="card" style="cursor:pointer"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:36px;height:36px;background:rgba(245,158,11,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--amber)"><i class="ti ti-building"></i></div><div><div style="font-size:14px;font-weight:600;color:var(--text)">E-commerce</div><div style="font-size:11px;color:var(--text3)">Online retail</div></div><div class="biz-dot" style="background:var(--amber);margin-left:auto"></div></div><div style="font-size:12px;color:var(--text2)">156 contacts · 2 campaigns · 4 tasks</div><div class="progress" style="margin-top:8px"><div class="progress-bar" style="width:35%;background:var(--amber)"></div></div></div>
+      <div class="card" style="cursor:pointer"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:36px;height:36px;background:rgba(239,68,68,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--red)"><i class="ti ti-building"></i></div><div><div style="font-size:14px;font-weight:600;color:var(--text)">Real Estate</div><div style="font-size:11px;color:var(--text3)">Property</div></div><div class="biz-dot" style="background:var(--red);margin-left:auto"></div></div><div style="font-size:12px;color:var(--text2)">310 contacts · 1 campaign · 1 task</div><div class="progress" style="margin-top:8px"><div class="progress-bar" style="width:18%;background:var(--red)"></div></div></div>
+    </div>
+  </div>
+
+  <!-- ══ NOTES ══ -->
+  <div id="view-notes" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Notes</span></div>
+      <h1>Notes</h1><p>Quick notes, ideas, and reminders — linked to businesses or contacts.</p>
+    </div>
+    <button class="btn btn-primary" style="margin-bottom:20px" onclick="openModal('new-note')"><i class="ti ti-plus"></i> New note</button>
+    <div class="notes-grid">
+      <div class="note-card"><div class="note-title">Webinar follow-up script</div><div class="note-preview">After each webinar, send the recording within 24 hours. Add attendees to the nurture sequence. Non-attendees get a separate "you missed it" email.</div><div class="note-date">Jun 18, 2026 · Tech Startup</div></div>
+      <div class="note-card"><div class="note-title">GHL webhook setup notes</div><div class="note-preview">Webhook URL: apps.script.google.com/... Contact event triggers: contact.create, contact.update, opportunity.status.</div><div class="note-date">Jun 17, 2026 · Integration</div></div>
+      <div class="note-card"><div class="note-title">Jessica onboarding checklist</div><div class="note-preview">Show her: contact filters, how to mark attendance, where to download export, updating campaign status. She only needs Tasks and Sessions tabs.</div><div class="note-date">Jun 15, 2026 · Team</div></div>
+      <div class="note-card" style="border:1px dashed var(--border2);background:transparent;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;min-height:120px;cursor:pointer" onclick="openModal('new-note')"><i class="ti ti-plus" style="font-size:20px;color:var(--text3)"></i><span style="font-size:12px;color:var(--text3)">New note</span></div>
+    </div>
+  </div>
+
+  <!-- ══ PROFILE ══ -->
+  <div id="view-profile" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Profile</span></div>
+      <h1>My profile</h1><p>Your personal details and account settings.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:280px 1fr;gap:16px">
+      <div><div class="card" style="text-align:center"><div style="width:72px;height:72px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:600;color:#fff;margin:0 auto 12px">AK</div><div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px">Arif Khan</div><div style="font-size:12px;color:var(--text3)">Admin · GHL Manager</div><button class="btn btn-ghost" style="margin-top:14px;width:100%;justify-content:center;font-size:12px"><i class="ti ti-camera"></i> Change photo</button></div></div>
+      <div class="card">
+        <div class="profile-section"><h3>Personal info</h3><div class="field-row"><div class="field"><label>First name</label><input value="Arif"></div><div class="field"><label>Last name</label><input value="Khan"></div></div><div class="field-row"><div class="field"><label>Email</label><input value="arif@commandcenter.io"></div><div class="field"><label>Phone</label><input value="+880 1XX XXX XXXX"></div></div><div class="field-row"><div class="field"><label>Role</label><input value="GHL Manager / Admin"></div><div class="field"><label>Timezone</label><select><option>Asia/Dhaka (UTC+6)</option></select></div></div></div>
+        <div class="profile-section"><h3>GHL connection</h3><div class="field-row"><div class="field"><label>GHL Location ID</label><input placeholder="Enter your GHL location ID"></div><div class="field"><label>API Key</label><input type="password" placeholder="sk-••••••••••••••••"></div></div><div class="field"><label>Google Sheet ID</label><input placeholder="Paste your Google Sheet ID here"></div></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:6px"><button class="btn btn-primary"><i class="ti ti-device-floppy"></i> Save changes</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SETTINGS ══ -->
+  <div id="view-settings" class="view">
+    <div class="page-header">
+      <div class="breadcrumb">Home <i class="ti ti-chevron-right" style="font-size:11px"></i> <span>Settings</span></div>
+      <h1>Settings & integrations</h1><p>Configure your dashboard, team access, and external connections.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-title" style="margin-bottom:6px">Backend connection (data storage)</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:14px">This is what makes your data survive a refresh and work from any device. Paste the Web app URL from your Google Apps Script deployment below.</div>
+        <div class="field" style="margin-bottom:10px"><label>Apps Script Web app URL</label><input id="backend-url-field" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-primary btn-sm" onclick="saveBackendUrl()"><i class="ti ti-device-floppy"></i> Save & connect</button>
+          <button class="btn btn-ghost btn-sm" onclick="testBackendConnection()"><i class="ti ti-refresh"></i> Test connection</button>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:8px">
+            <span id="sync-status-dot" style="width:8px;height:8px;border-radius:50%;background:var(--text3)"></span>
+            <span id="sync-status-label" style="font-size:12px;color:var(--text2)">Not connected — local only</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:12px"><i class="ti ti-info-circle" style="font-size:12px"></i> Don't have this yet? Download the setup file and follow the steps inside — it's free and takes about 10 minutes.</div>
+      </div>
+      <div class="card"><div class="card-title" style="margin-bottom:14px">GHL webhook</div><div style="font-size:13px;color:var(--text2);margin-bottom:8px">Once your backend is connected, paste this same Apps Script URL into GHL → Settings → Notifications → Webhook to push attendance tags automatically. (Phase 2 — not active yet.)</div><div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;font-family:monospace;color:var(--text3);word-break:break-all" id="ghl-webhook-display">Connect a backend URL above first</div><div style="margin-top:14px;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)"><span style="width:8px;height:8px;border-radius:50%;background:var(--text3)"></span> Not connected yet</div></div>
+      <div class="card"><div class="card-title" style="margin-bottom:14px">Team access</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px">Who can see this dashboard?</div><div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;color:var(--text)">Jessica</div><div style="font-size:11px;color:var(--text3)">Tasks + Sessions only</div></div><span class="badge badge-blue">Editor</span></div><div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0"><div><div style="font-size:13px;color:var(--text)">Arif Khan</div><div style="font-size:11px;color:var(--text3)">All sections</div></div><span class="badge badge-green">Admin</span></div><button class="btn btn-ghost btn-sm" style="margin-top:8px"><i class="ti ti-user-plus"></i> Invite team member</button></div>
+      <div class="card"><div class="card-title" style="margin-bottom:14px">Zoom integration</div><div style="font-size:13px;color:var(--text2);margin-bottom:10px">Import attendance automatically after each session.</div><button class="btn btn-ghost" style="width:100%;justify-content:center"><i class="ti ti-video"></i> Connect Zoom account</button><div style="font-size:12px;color:var(--text3);margin-top:10px">Or: use "Import Zoom CSV" in the Sessions tab after each webinar.</div></div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-box" style="width:520px">
+    <h2 id="modal-title">New task</h2>
+    <div id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modal-save-btn" onclick="saveTask()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const titles={home:'Dashboard',tasks:'Task board',scheduler:'Content scheduler',calendar:'Content calendar',sessions:'Sessions & webinars',email:'Email campaigns',social:'Social media',projects:'Project tracker','project-detail':'Project detail','session-detail':'Session detail',pipeline:'Pipeline',contacts:'Contacts','contact-detail':'Contact detail','cross-session':'Cross-session attendance',businesses:'Businesses',notes:'Notes',profile:'Profile',settings:'Settings & integrations'};
+
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+id+"'"))n.classList.add('active');
+  });
+  document.getElementById('topbar-title').textContent=titles[id]||id;
+  if(id==='calendar')renderCalendar();
+}
+
+/* ───────── SHARED DATA ───────── */
+const BUSINESSES=['Retail Co','Tech Startup','Consulting Ltd','E-commerce','Real Estate'];
+const PEOPLE=['Arif','Sarah','James','Nadia','Unassigned'];
+const TODAY = new Date(2026,5,19); // Jun 19 2026, matches dashboard "today"
+
+function fmtDate(d){if(!d)return '—';const dt=new Date(d+'T00:00:00');const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return dt.getDate()+' '+months[dt.getMonth()]}
+function isOverdue(due,status){if(!due||status==='Done'||status==='Published')return false;return new Date(due+'T00:00:00')<TODAY}
+function initials(name){return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+
+/* ───────── TASK BOARD ───────── */
+let tasks=[
+  {id:1,name:'Update client proposal',prio:'High',status:'Pending',biz:'Consulting Ltd',assign:'Sarah',created:'2026-06-10',due:'2026-06-17',doneDate:''},
+  {id:2,name:'Fix checkout bug',prio:'High',status:'In progress',biz:'E-commerce',assign:'James',created:'2026-06-14',due:'2026-06-20',doneDate:''},
+  {id:3,name:'Q2 inventory review',prio:'Medium',status:'Pending',biz:'Retail Co',assign:'Nadia',created:'2026-06-15',due:'2026-06-25',doneDate:''},
+  {id:4,name:'Onboard new developer',prio:'Medium',status:'In progress',biz:'Tech Startup',assign:'Arif',created:'2026-06-12',due:'2026-06-28',doneDate:''},
+  {id:5,name:'Lease renewal follow-up',prio:'Low',status:'Pending',biz:'Real Estate',assign:'Unassigned',created:'2026-06-16',due:'2026-06-30',doneDate:''},
+  {id:6,name:'Analytics dashboard setup',prio:'Medium',status:'Done',biz:'Tech Startup',assign:'Arif',created:'2026-06-10',due:'2026-06-18',doneDate:'2026-06-18'},
+  {id:7,name:'Social media calendar',prio:'Low',status:'Done',biz:'Retail Co',assign:'Sarah',created:'2026-06-08',due:'2026-06-15',doneDate:'2026-06-14'},
+];
+let nextTaskId=8;
+let editTaskId=null;
+let taskView='board';
+let taskStatusFilter='';
+
+function setStatusFilter(status){
+  taskStatusFilter=status;
+  document.querySelectorAll('.stat-filter-card').forEach(c=>{c.classList.remove('active');c.style.borderColor='var(--border)'});
+  const map={'':'sf-all','Pending':'sf-pending','In progress':'sf-progress','Done':'sf-done'};
+  const el=document.getElementById(map[status]);
+  el.classList.add('active');el.style.borderColor='var(--accent)';
+  setTaskView('all');
+}
+
+function initTaskFilters(){
+  const fb=document.getElementById('task-filter-biz');
+  const fa=document.getElementById('task-filter-assign');
+  fb.innerHTML='<option value="">All businesses</option>'+BUSINESSES.map(b=>`<option>${b}</option>`).join('');
+  fa.innerHTML='<option value="">All assignees</option>'+PEOPLE.map(p=>`<option>${p}</option>`).join('');
+}
+
+function setTaskView(v){
+  taskView=v;
+  document.getElementById('task-view-all').classList.toggle('active',v==='all');
+  document.getElementById('task-view-board').classList.toggle('active',v==='board');
+  document.getElementById('task-board-wrap').style.display=v==='board'?'block':'none';
+  document.getElementById('task-list-wrap').style.display=v==='all'?'block':'none';
+  if(v==='board'&&taskStatusFilter!==''){
+    taskStatusFilter='';
+    document.querySelectorAll('.stat-filter-card').forEach(c=>{c.classList.remove('active');c.style.borderColor='var(--border)'});
+    document.getElementById('sf-all').classList.add('active');
+    document.getElementById('sf-all').style.borderColor='var(--accent)';
+  }
+  renderTasks();
+}
+
+function getFilteredTasks(){
+  const q=(document.getElementById('task-search').value||'').toLowerCase();
+  const fb=document.getElementById('task-filter-biz').value;
+  const fp=document.getElementById('task-filter-prio').value;
+  const fa=document.getElementById('task-filter-assign').value;
+  return tasks.filter(t=>{
+    if(q&&!t.name.toLowerCase().includes(q))return false;
+    if(fb&&t.biz!==fb)return false;
+    if(fp&&t.prio!==fp)return false;
+    if(fa&&t.assign!==fa)return false;
+    if(taskStatusFilter&&t.status!==taskStatusFilter)return false;
+    return true;
+  });
+}
+
+function prioBadge(p){const c=p==='High'?'badge-red':p==='Medium'?'badge-amber':'badge-blue';return `<span class="badge ${c}">${p}</span>`}
+
+function taskCardHTML(t){
+  const overdue=isOverdue(t.due,t.status);
+  return `<div class="kan-card" onclick="openTaskModal(${t.id})" style="cursor:pointer">
+    <div class="kan-card-title" style="${t.status==='Done'?'text-decoration:line-through;opacity:.6':''}">${t.name}</div>
+    <div class="kan-card-meta">${prioBadge(t.prio)}<span class="badge badge-gray">${t.biz}</span></div>
+    <div style="font-size:11px;color:${overdue?'var(--red)':'var(--text3)'};margin-top:6px">
+      ${overdue?'<i class="ti ti-alert-circle" style="font-size:12px"></i> Overdue · ':(t.status==='Done'?'Completed · ':'Due '+fmtDate(t.due)+' · ')}${t.assign}
+    </div>
+  </div>`;
+}
+
+function renderTasks(){
+  const filtered=getFilteredTasks();
+  const cols={Pending:[],['In progress']:[],Done:[]};
+  filtered.forEach(t=>{if(cols[t.status])cols[t.status].push(t)});
+  document.getElementById('task-kanban').innerHTML=`
+    <div class="kan-col"><div class="kan-col-head"><span>Pending</span><span class="badge badge-gray">${cols['Pending'].length}</span></div>${cols['Pending'].map(taskCardHTML).join('')}<button class="quick-add" onclick="openTaskModal()"><i class="ti ti-plus"></i> Add task</button></div>
+    <div class="kan-col"><div class="kan-col-head"><span>In progress</span><span class="badge badge-purple">${cols['In progress'].length}</span></div>${cols['In progress'].map(taskCardHTML).join('')}<button class="quick-add" onclick="openTaskModal()"><i class="ti ti-plus"></i> Add task</button></div>
+    <div class="kan-col"><div class="kan-col-head"><span>Done</span><span class="badge badge-green">${cols['Done'].length}</span></div>${cols['Done'].map(taskCardHTML).join('')}</div>
+  `;
+  document.getElementById('task-list-body').innerHTML=filtered.map(t=>{
+    const overdue=isOverdue(t.due,t.status);
+    return `<tr>
+      <td><input type="checkbox" ${t.status==='Done'?'checked':''} onchange="toggleTaskDone(${t.id})" style="cursor:pointer"></td>
+      <td class="td-main" style="${t.status==='Done'?'text-decoration:line-through;opacity:.6':''}">${t.name}</td>
+      <td>${prioBadge(t.prio)}</td>
+      <td><span class="badge ${t.status==='Done'?'badge-green':t.status==='In progress'?'badge-purple':'badge-blue'}">${t.status}</span></td>
+      <td>${t.biz}</td>
+      <td><span style="font-size:11px;background:var(--bg4);padding:2px 8px;border-radius:10px">${t.assign}</span></td>
+      <td style="color:var(--text3)">${fmtDate(t.created)}</td>
+      <td style="color:${overdue?'var(--red)':'var(--text2)'}">${fmtDate(t.due)}</td>
+      <td style="color:var(--green)">${t.doneDate?fmtDate(t.doneDate):'—'}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="openTaskModal(${t.id})"><i class="ti ti-edit"></i></button> <button class="btn btn-ghost btn-sm" onclick="deleteTask(${t.id})"><i class="ti ti-trash"></i></button></td>
+    </tr>`;
+  }).join('');
+
+  // stats
+  document.getElementById('task-stat-total').textContent=tasks.length;
+  document.getElementById('task-stat-pending').textContent=tasks.filter(t=>t.status==='Pending').length;
+  document.getElementById('task-stat-progress').textContent=tasks.filter(t=>t.status==='In progress').length;
+  document.getElementById('task-stat-done').textContent=tasks.filter(t=>t.status==='Done').length;
+  document.getElementById('nav-task-count').textContent=tasks.filter(t=>t.status!=='Done').length;
+
+  syncDashboardFromTasks();
+  if(typeof queueSave==='function')queueSave();
+}
+
+function toggleTaskDone(id){
+  const t=tasks.find(t=>t.id===id);
+  if(!t)return;
+  if(t.status==='Done'){t.status='Pending';t.doneDate=''}
+  else{t.status='Done';t.doneDate=todayStr()}
+  renderTasks();
+}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);renderTasks()}
+
+function openTaskModal(id){
+  editTaskId=id||null;
+  const t=id?tasks.find(t=>t.id===id):null;
+  document.getElementById('modal-title').textContent=t?'Edit task':'New task';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="field" style="margin-bottom:10px"><label>Task name</label><input id="mf-name" value="${t?t.name:''}" placeholder="What needs to be done?"></div>
+    <div class="field-row">
+      <div class="field"><label>Priority</label><select id="mf-prio"><option ${t&&t.prio==='High'?'selected':''}>High</option><option ${!t||t.prio==='Medium'?'selected':''}>Medium</option><option ${t&&t.prio==='Low'?'selected':''}>Low</option></select></div>
+      <div class="field"><label>Status</label><select id="mf-status" onchange="onModalStatusChange()"><option ${!t||t.status==='Pending'?'selected':''}>Pending</option><option ${t&&t.status==='In progress'?'selected':''}>In progress</option><option ${t&&t.status==='Done'?'selected':''}>Done</option></select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Business</label><select id="mf-biz">${BUSINESSES.map(b=>`<option ${t&&t.biz===b?'selected':''}>${b}</option>`).join('')}</select></div>
+      <div class="field"><label>Assign to</label><select id="mf-assign">${PEOPLE.map(p=>`<option ${t&&t.assign===p?'selected':(!t&&p==='Unassigned'?'selected':'')}>${p}</option>`).join('')}</select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Date assigned (created)</label><input type="date" id="mf-created" value="${t?t.created:todayStr()}"></div>
+      <div class="field"><label>Due date</label><input type="date" id="mf-due" value="${t?t.due:''}"></div>
+    </div>
+    <div class="field"><label>Done date</label><input type="date" id="mf-done" value="${t?t.doneDate:''}" ${(!t||t.status!=='Done')?'disabled':''}></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px"><i class="ti ti-info-circle" style="font-size:12px"></i> Done date fills in automatically when status is set to Done — you can adjust it if needed.</div>
+  `;
+  document.getElementById('modal-footer').innerHTML=`
+    ${t?'<button class="btn btn-ghost" onclick="deleteTask('+t.id+');closeModal()" style="margin-right:auto;color:var(--red)"><i class="ti ti-trash"></i> Delete</button>':''}
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveTask()">Save task</button>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function onModalStatusChange(){
+  const status=document.getElementById('mf-status').value;
+  const doneField=document.getElementById('mf-done');
+  if(status==='Done'){
+    doneField.disabled=false;
+    if(!doneField.value)doneField.value=todayStr();
+  }else{
+    doneField.disabled=true;
+  }
+}
+
+function saveTask(){
+  const name=document.getElementById('mf-name').value.trim();
+  if(!name)return;
+  const status=document.getElementById('mf-status').value;
+  const data={
+    name,
+    prio:document.getElementById('mf-prio').value,
+    status,
+    biz:document.getElementById('mf-biz').value,
+    assign:document.getElementById('mf-assign').value,
+    created:document.getElementById('mf-created').value,
+    due:document.getElementById('mf-due').value,
+    doneDate:status==='Done'?(document.getElementById('mf-done').value||todayStr()):''
+  };
+  if(editTaskId){Object.assign(tasks.find(t=>t.id===editTaskId),data)}
+  else{tasks.push({id:nextTaskId++,...data})}
+  closeModal();renderTasks();
+}
+
+/* ───────── CONTENT SCHEDULER ───────── */
+let content=[
+  {id:1,title:'June sale announcement',type:'Social post',biz:'Retail Co',status:'Scheduled',date:'2026-06-20',time:'10:00',tz:'America/New_York',notes:'20% off all items, Instagram',customFields:[],sequenceSteps:[]},
+  {id:2,title:'Webinar reminder post',type:'Social post',biz:'Tech Startup',status:'Needs approval',date:'2026-06-21',time:'09:00',tz:'America/New_York',notes:'LinkedIn, join us Wednesday',customFields:[],sequenceSteps:[]},
+  {id:3,title:'Retail Co June Promo — email 2',type:'Email',biz:'Retail Co',status:'Scheduled',date:'2026-06-22',time:'08:00',tz:'America/New_York',notes:'Second email in promo sequence',customFields:[],sequenceSteps:[]},
+  {id:4,title:'New listing — Gulshan apartment',type:'Social post',biz:'Real Estate',status:'Scheduled',date:'2026-06-22',time:'14:00',tz:'America/New_York',notes:'Facebook',customFields:[],sequenceSteps:[]},
+  {id:5,title:'Monthly Webinar reminder email',type:'Webinar promo',biz:'Tech Startup',status:'Draft',date:'',time:'',tz:'',notes:'Draft — needs final CTA link',customFields:[],sequenceSteps:[]},
+  {id:6,title:'Cart abandonment sequence',type:'Email sequence step',biz:'E-commerce',status:'Scheduled',date:'',time:'',tz:'',notes:'9-email cart abandonment series',customFields:[],sequenceSteps:[
+    {step:1,content:'You left something behind 👀',date:'2026-06-21',time:'09:00',tz:'America/New_York'},
+    {step:2,content:'Still thinking it over?',date:'2026-06-22',time:'09:00',tz:'America/New_York'},
+    {step:3,content:'10% off if you complete your order today',date:'2026-06-24',time:'09:00',tz:'America/New_York'},
+    {step:4,content:'Last chance — cart expires soon',date:'',time:'',tz:''},
+    {step:5,content:'',date:'',time:'',tz:''},
+  ]},
+];
+let nextContentId=7;
+let editContentId=null;
+
+function initContentFilters(){
+  const fb1=document.getElementById('cs-filter-biz');
+  fb1.innerHTML='<option value="">All businesses</option>'+BUSINESSES.map(b=>`<option>${b}</option>`).join('');
+  refreshTypeFilter();
+  initContentMonthFilter();
+}
+
+function initContentMonthFilter(){
+  const monthsFull=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const sel=document.getElementById('cs-filter-month');
+  // default to current month (June 2026), offer a 12-month spread either side
+  let opts='<option value="">All months</option>';
+  for(let m=0;m<12;m++){
+    const val=`2026-${String(m+1).padStart(2,'0')}`;
+    opts+=`<option value="${val}" ${m===5?'selected':''}>${monthsFull[m]} 2026</option>`;
+  }
+  sel.innerHTML=opts;
+}
+
+function refreshTypeFilter(){
+  const ftEl=document.getElementById('cs-filter-type');
+  const prev=ftEl.value;
+  ftEl.innerHTML='<option value="">All types</option>'+allContentTypes().map(t=>`<option>${t}</option>`).join('');
+  ftEl.value=prev;
+}
+
+function resetContentFilters(){
+  document.getElementById('cs-filter-type').value='';
+  document.getElementById('cs-filter-biz').value='';
+  document.getElementById('cs-filter-month').value='';
+  contentStatusFilter='';
+  document.querySelectorAll('.cs-stat-filter').forEach(c=>c.style.borderColor='var(--border)');
+  renderContent();
+}
+
+let contentStatusFilter='';
+let contentView='board';
+
+function setContentStatusFilter(status){
+  contentStatusFilter=status;
+  document.querySelectorAll('.cs-stat-filter').forEach(c=>c.style.borderColor='var(--border)');
+  const map={'Draft':'csf-draft','Scheduled':'csf-scheduled','Needs approval':'csf-approval','Published':'csf-published'};
+  document.getElementById(map[status]).style.borderColor='var(--accent)';
+  setContentView('all');
+}
+
+function setContentView(v){
+  contentView=v;
+  document.getElementById('cs-view-all').classList.toggle('active',v==='all');
+  document.getElementById('cs-view-board').classList.toggle('active',v==='board');
+  document.getElementById('content-board-wrap').style.display=v==='board'?'block':'none';
+  document.getElementById('content-all-wrap').style.display=v==='all'?'block':'none';
+  if(v==='board'&&contentStatusFilter!==''){
+    contentStatusFilter='';
+    document.querySelectorAll('.cs-stat-filter').forEach(c=>c.style.borderColor='var(--border)');
+  }
+  renderContent();
+}
+
+function getFilteredContent(){
+  const ft=document.getElementById('cs-filter-type').value;
+  const fb=document.getElementById('cs-filter-biz').value;
+  const fm=document.getElementById('cs-filter-month').value;
+  return content.filter(c=>{
+    if(ft&&c.type!==ft)return false;
+    if(fb&&c.biz!==fb)return false;
+    if(fm&&(!c.date||!c.date.startsWith(fm)))return false;
+    if(contentStatusFilter&&c.status!==contentStatusFilter)return false;
+    return true;
+  });
+}
+
+function typeBadgeColor(type){
+  if(type==='Email')return 'badge-blue';
+  if(type==='Social post')return 'badge-purple';
+  if(type==='Webinar promo')return 'badge-amber';
+  return 'badge-gray';
+}
+
+function contentCardHTML(c){
+  const cfCount=(c.customFields||[]).length;
+  const isPublished=c.status==='Published';
+  const isSequence=c.type==='Email sequence step'&&c.sequenceSteps&&c.sequenceSteps.length;
+  let dateLine;
+  if(isSequence){
+    const total=c.sequenceSteps.length;
+    const scheduled=c.sequenceSteps.filter(s=>s.date).length;
+    const nextStep=c.sequenceSteps.filter(s=>s.date&&s.date>=todayStr()).sort((a,b)=>a.date.localeCompare(b.date))[0];
+    dateLine=`<i class="ti ti-list-numbers" style="font-size:11px"></i> ${scheduled} of ${total} scheduled${nextStep?' · next '+fmtDate(nextStep.date):''}`;
+  }else{
+    dateLine=c.date?fmtDateTime(c.date,c.time,c.tz):'No date set';
+  }
+  return `<div class="kan-card" onclick="openContentModal(${c.id})" style="cursor:pointer">
+    <div class="kan-card-title" style="${isPublished?'text-decoration:line-through;opacity:.6':''}">${c.title}</div>
+    <div class="kan-card-meta">
+      <span class="badge ${typeBadgeColor(c.type)}">${c.type}</span>
+      <span class="badge badge-gray">${c.biz}</span>
+      ${cfCount?`<span class="badge badge-gray"><i class="ti ti-list-details" style="font-size:11px"></i> ${cfCount}</span>`:''}
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:6px">${dateLine}</div>
+  </div>`;
+}
+
+function renderContent(){
+  const filtered=getFilteredContent();
+
+  // board view (always all 4 statuses, ignores status filter visually since board IS the status split)
+  const boardSource=content.filter(c=>{
+    const ft=document.getElementById('cs-filter-type').value;
+    const fb=document.getElementById('cs-filter-biz').value;
+    const fm=document.getElementById('cs-filter-month').value;
+    if(ft&&c.type!==ft)return false;
+    if(fb&&c.biz!==fb)return false;
+    if(fm&&(!c.date||!c.date.startsWith(fm)))return false;
+    return true;
+  });
+  const cols={Draft:[],['Needs approval']:[],Scheduled:[],Published:[]};
+  boardSource.forEach(c=>{if(cols[c.status])cols[c.status].push(c)});
+  document.getElementById('content-kanban').innerHTML=`
+    <div class="kan-col"><div class="kan-col-head"><span>Draft</span><span class="badge badge-gray">${cols['Draft'].length}</span></div>${cols['Draft'].map(contentCardHTML).join('')}<button class="quick-add" onclick="openContentModal()"><i class="ti ti-plus"></i> Add content</button></div>
+    <div class="kan-col"><div class="kan-col-head"><span>Needs approval</span><span class="badge badge-amber">${cols['Needs approval'].length}</span></div>${cols['Needs approval'].map(contentCardHTML).join('')}</div>
+    <div class="kan-col"><div class="kan-col-head"><span>Scheduled</span><span class="badge badge-blue">${cols['Scheduled'].length}</span></div>${cols['Scheduled'].map(contentCardHTML).join('')}</div>
+    <div class="kan-col"><div class="kan-col-head"><span>Published</span><span class="badge badge-green">${cols['Published'].length}</span></div>${cols['Published'].map(contentCardHTML).join('')}</div>
+  `;
+
+  // all content table (respects status filter from stat cards)
+  document.getElementById('content-all-body').innerHTML=filtered.map(c=>{
+    const isPublished=c.status==='Published';
+    const statusBadge=c.status==='Published'?'badge-green':c.status==='Scheduled'?'badge-blue':c.status==='Needs approval'?'badge-amber':'badge-gray';
+    const isSeq=c.type==='Email sequence step'&&c.sequenceSteps&&c.sequenceSteps.length;
+    let dateCell,timeCell;
+    if(isSeq){
+      const total=c.sequenceSteps.length;
+      const scheduledCount=c.sequenceSteps.filter(s=>s.date).length;
+      dateCell=`${scheduledCount}/${total} dated`;
+      timeCell='—';
+    }else{
+      dateCell=c.date?fmtDate(c.date):'—';
+      timeCell=c.time?convertTimeForDisplay(c.date,c.time,c.tz):'—';
+    }
+    return `<tr>
+      <td class="td-main" style="${isPublished?'text-decoration:line-through;opacity:.6':''}">${c.title}${isSeq?` <span style="font-size:10px;color:var(--text3)">(${c.sequenceSteps.length}-email sequence)</span>`:''}</td>
+      <td><span class="badge ${typeBadgeColor(c.type)}">${c.type}</span></td>
+      <td>${c.biz}</td>
+      <td><span class="badge ${statusBadge}">${c.status}</span></td>
+      <td style="color:var(--text2)">${dateCell}</td>
+      <td style="color:var(--text2)">${timeCell}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="openContentModal(${c.id})"><i class="ti ti-edit"></i></button> <button class="btn btn-ghost btn-sm" onclick="deleteContent(${c.id})"><i class="ti ti-trash"></i></button></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('cs-stat-draft').textContent=content.filter(c=>c.status==='Draft').length;
+  document.getElementById('cs-stat-scheduled').textContent=content.filter(c=>c.status==='Scheduled').length;
+  document.getElementById('cs-stat-approval').textContent=content.filter(c=>c.status==='Needs approval').length;
+  document.getElementById('cs-stat-published').textContent=content.filter(c=>c.status==='Published').length;
+  document.getElementById('nav-draft-count').textContent=content.filter(c=>c.status==='Draft').length;
+  if(typeof queueSave==='function')queueSave();
+}
+
+function fmtDateTime(date,time,tz){
+  if(!date)return '—';
+  let out=fmtDate(date);
+  if(time){
+    out+=', '+convertTimeForDisplay(date,time,tz);
+  }
+  return out;
+}
+
+/* Converts a stored date+time+sourceTz into a 12hr string in the currently selected viewing timezone.
+   If no source tz was stored (legacy items), just display the raw time as entered, unconverted. */
+function convertTimeForDisplay(date,time,sourceTz){
+  if(!time)return '';
+  if(!sourceTz)return formatTimeShort(time)+' (zone unset)';
+  try{
+    const[y,mo,d]=date.split('-').map(Number);
+    const[h,mi]=time.split(':').map(Number);
+    // build a UTC instant assuming the wall-clock time is in sourceTz, by checking the offset
+    const asUTCGuess=new Date(Date.UTC(y,mo-1,d,h,mi));
+    const tzOffsetMin=getTzOffsetMinutes(sourceTz,asUTCGuess);
+    const trueUTC=new Date(asUTCGuess.getTime()-tzOffsetMin*60000);
+    const opts={hour:'numeric',minute:'2-digit',hour12:true,timeZone:selectedTz};
+    return new Intl.DateTimeFormat('en-US',opts).format(trueUTC);
+  }catch(e){
+    return formatTimeShort(time);
+  }
+}
+
+function getTzOffsetMinutes(tz,date){
+  const dtf=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const parts=dtf.formatToParts(date).reduce((acc,p)=>{acc[p.type]=p.value;return acc},{});
+  const asIfUTC=Date.UTC(parts.year,parts.month-1,parts.day,parts.hour,parts.minute,parts.second);
+  return (asIfUTC-date.getTime())/60000;
+}
+
+function tzAbbrev(tz){
+  const obj=TIMEZONES.find(t=>t.tz===tz);
+  return obj?obj.label.match(/\(([^)]+)\)/)?.[1]||obj.label:tz;
+}
+
+/* custom content types, stored across the session */
+let customContentTypes=JSON.parse(localStorage.getItem('cc_customTypes')||'[]');
+function saveCustomTypes(){localStorage.setItem('cc_customTypes',JSON.stringify(customContentTypes))}
+
+let currentCustomFields=[]; // [{key,value}] for the modal currently open
+let currentSequenceSteps=[]; // [{step,content,date,time,tz}] for sequence-type content
+
+function onTypeSelectChange(){
+  const sel=document.getElementById('cf-type');
+  document.getElementById('cf-custom-type-wrap').style.display=sel.value==='__custom__'?'block':'none';
+  const isSeq=sel.value==='Email sequence step';
+  if(isSeq&&!currentSequenceSteps.length){
+    currentSequenceSteps=makeSequenceSteps(3);
+    const countSel=document.getElementById('cf-seq-count');
+    if(countSel)countSel.value='3';
+  }
+  toggleSequenceMode(isSeq);
+  if(isSeq)renderSequenceSteps();
+}
+
+function allContentTypes(){
+  return ['Email','Social post','Email sequence step','Webinar promo',...customContentTypes];
+}
+
+function openContentModal(id){
+  editContentId=id||null;
+  const c=id?content.find(c=>c.id===id):null;
+  currentCustomFields=c&&c.customFields?JSON.parse(JSON.stringify(c.customFields)):[];
+  currentSequenceSteps=c&&c.sequenceSteps?JSON.parse(JSON.stringify(c.sequenceSteps)):[];
+  document.getElementById('modal-title').textContent=c?'Edit content':'New content';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="field" style="margin-bottom:10px"><label>Title</label><input id="cf-title" value="${c?c.title:''}" placeholder="e.g. June promo email, IG post, or 'Cart abandonment sequence'"></div>
+    <div class="field-row">
+      <div class="field"><label>Content type</label><select id="cf-type" onchange="onTypeSelectChange()">
+        ${allContentTypes().map(t=>`<option ${c&&c.type===t?'selected':''}>${t}</option>`).join('')}
+        <option value="__custom__">+ Add custom type…</option>
+      </select>
+      ${customContentTypes.length?'<div style="margin-top:5px"><a href="#" onclick="toggleManageTypes();return false" style="font-size:11px;color:var(--text3);text-decoration:underline">Manage custom types</a></div>':''}
+      </div>
+      <div class="field"><label>Business</label><select id="cf-biz">${BUSINESSES.map(b=>`<option ${c&&c.biz===b?'selected':''}>${b}</option>`).join('')}</select></div>
+    </div>
+    <div id="cf-manage-types-wrap" style="display:none;margin-bottom:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+      <div style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Custom types — Email, Social post, Email sequence step, and Webinar promo are built in and can't be removed</div>
+      <div id="cf-manage-types-list"></div>
+    </div>
+    <div class="field" id="cf-custom-type-wrap" style="display:none;margin-bottom:10px"><label>New type name</label><input id="cf-custom-type-name" placeholder="e.g. SMS blast, Push notification"></div>
+    <div class="field" style="margin-bottom:10px"><label>Notes / content</label><textarea id="cf-notes" rows="3" placeholder="Draft copy, link, or notes…" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;width:100%;resize:vertical">${c?c.notes:''}</textarea></div>
+
+    <div id="cf-single-date-wrap" class="field-row">
+      <div class="field"><label>Status</label><select id="cf-status">
+        ${['Draft','Needs approval','Scheduled','Published'].map(s=>`<option ${c&&c.status===s?'selected':(!c&&s==='Draft'?'selected':'')}>${s}</option>`).join('')}
+      </select></div>
+      <div class="field" style="display:grid;grid-template-columns:1.3fr 1fr;gap:8px">
+        <div><label style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">Date</label><input type="date" id="cf-date" value="${c?c.date:''}"></div>
+        <div><label style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">Time</label><input type="time" id="cf-time" value="${c&&c.time?c.time:''}"></div>
+      </div>
+    </div>
+
+    <div id="cf-sequence-wrap" style="display:none">
+      <div class="field-row">
+        <div class="field"><label>Number of emails in sequence</label><select id="cf-seq-count" onchange="onSeqCountChange()">
+          ${[2,3,4,5,6,7,8,9,10,12].map(n=>`<option value="${n}">${n} emails</option>`).join('')}
+        </select></div>
+        <div class="field"><label>Overall status</label><select id="cf-status-seq">
+          ${['Draft','Needs approval','Scheduled','Published'].map(s=>`<option ${c&&c.status===s?'selected':(!c&&s==='Draft'?'selected':'')}>${s}</option>`).join('')}
+        </select></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px"><i class="ti ti-info-circle" style="font-size:12px"></i> Fill in each email's content and its own date — each one books its own slot on the calendar. Status shown per step: blank date = Draft, dated = Scheduled.</div>
+      <div id="cf-sequence-steps-list"></div>
+    </div>
+
+    <div id="cf-info-line" style="font-size:11px;color:var(--text3);margin-bottom:4px"><i class="ti ti-info-circle" style="font-size:12px"></i> Set status to "Scheduled" with a date (and time, optional) to make this appear on the content calendar.</div>
+    <div style="font-size:11px;color:var(--accent);margin-bottom:14px"><i class="ti ti-clock" style="font-size:12px"></i> Time entered is in <strong id="cf-tz-label"></strong> — change the timezone from the clock on the Calendar or Scheduler page.</div>
+
+    <div style="border-top:1px solid var(--border);padding-top:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <label style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em">Custom fields</label>
+        <button class="btn btn-ghost btn-sm" onclick="addCustomFieldRow()" type="button"><i class="ti ti-plus"></i> Add field</button>
+      </div>
+      <div id="cf-custom-fields-list"></div>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML=`
+    ${c?'<button class="btn btn-ghost" onclick="deleteContent('+c.id+');closeModal()" style="margin-right:auto;color:var(--red)"><i class="ti ti-trash"></i> Delete</button>':''}
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveContent()">Save content</button>
+  `;
+  renderCustomFieldRows();
+  const tzLabelEl=document.getElementById('cf-tz-label');
+  if(tzLabelEl){
+    const tzObj=TIMEZONES.find(t=>t.tz===selectedTz);
+    tzLabelEl.textContent=tzObj?tzObj.label:selectedTz;
+  }
+  // initialize sequence mode if this is (or becomes) an Email sequence step
+  const initialType=c?c.type:document.getElementById('cf-type').value;
+  if(initialType==='Email sequence step'){
+    if(!currentSequenceSteps.length)currentSequenceSteps=makeSequenceSteps(3);
+    const countSel=document.getElementById('cf-seq-count');
+    if(countSel)countSel.value=String(currentSequenceSteps.length);
+  }
+  toggleSequenceMode(initialType==='Email sequence step');
+  renderSequenceSteps();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function toggleSequenceMode(isSequence){
+  document.getElementById('cf-single-date-wrap').style.display=isSequence?'none':'flex';
+  document.getElementById('cf-sequence-wrap').style.display=isSequence?'block':'none';
+  document.getElementById('cf-info-line').style.display=isSequence?'none':'block';
+}
+
+function makeSequenceSteps(n){
+  const steps=[];
+  for(let i=1;i<=n;i++)steps.push({step:i,content:'',date:'',time:'',tz:''});
+  return steps;
+}
+
+function onSeqCountChange(){
+  const n=parseInt(document.getElementById('cf-seq-count').value,10);
+  if(n>currentSequenceSteps.length){
+    while(currentSequenceSteps.length<n)currentSequenceSteps.push({step:currentSequenceSteps.length+1,content:'',date:'',time:'',tz:''});
+  }else{
+    currentSequenceSteps=currentSequenceSteps.slice(0,n);
+  }
+  renderSequenceSteps();
+}
+
+function renderSequenceSteps(){
+  const wrap=document.getElementById('cf-sequence-steps-list');
+  if(!wrap)return;
+  wrap.innerHTML=currentSequenceSteps.map((s,i)=>{
+    const stepStatus=s.date?'Scheduled':'Draft';
+    return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:12px;font-weight:600;color:var(--text)">Email ${s.step}</span>
+        <span class="badge ${stepStatus==='Scheduled'?'badge-blue':'badge-gray'}">${stepStatus}</span>
+      </div>
+      <input placeholder="Subject line / content summary for email ${s.step}" value="${s.content||''}" oninput="updateSeqStep(${i},'content',this.value)" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;width:100%;margin-bottom:6px">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:8px">
+        <input type="date" value="${s.date||''}" onchange="updateSeqStep(${i},'date',this.value)" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 8px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif">
+        <input type="time" value="${s.time||''}" onchange="updateSeqStep(${i},'time',this.value)" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 8px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif">
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateSeqStep(i,prop,val){
+  currentSequenceSteps[i][prop]=val;
+  if(prop==='time'&&val)currentSequenceSteps[i].tz=selectedTz;
+  if(prop==='date'){renderSequenceSteps()} // refresh status badge
+}
+
+function toggleManageTypes(){
+  const wrap=document.getElementById('cf-manage-types-wrap');
+  const opening=wrap.style.display==='none';
+  wrap.style.display=opening?'block':'none';
+  if(opening)renderManageTypesList();
+}
+
+function renderManageTypesList(){
+  const wrap=document.getElementById('cf-manage-types-list');
+  if(!customContentTypes.length){
+    wrap.innerHTML=`<div style="font-size:12px;color:var(--text3)">No custom types yet.</div>`;
+    return;
+  }
+  wrap.innerHTML=customContentTypes.map(t=>{
+    const usageCount=content.filter(c=>c.type===t).length;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <span style="font-size:13px;color:var(--text)">${t}</span>
+        ${usageCount?`<span style="font-size:11px;color:var(--text3);margin-left:6px">used by ${usageCount} item${usageCount>1?'s':''}</span>`:''}
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="deleteCustomType('${t.replace(/'/g,"\\'")}')" style="color:var(--red)"><i class="ti ti-trash"></i> Delete</button>
+    </div>`;
+  }).join('');
+}
+
+function deleteCustomType(typeName){
+  const usageCount=content.filter(c=>c.type===typeName).length;
+  if(usageCount>0){
+    if(!confirm(`"${typeName}" is used by ${usageCount} content item${usageCount>1?'s':''}. Deleting it will reassign those items to "Email". Continue?`))return;
+    content.forEach(c=>{if(c.type===typeName)c.type='Email'});
+  }
+  customContentTypes=customContentTypes.filter(t=>t!==typeName);
+  saveCustomTypes();
+  refreshTypeFilter();
+  refreshCalendarTypeFilter();
+  renderManageTypesList();
+  // refresh the type dropdown in the currently open modal so the deleted type disappears immediately
+  const cfType=document.getElementById('cf-type');
+  if(cfType){
+    const prevVal=cfType.value;
+    cfType.innerHTML=allContentTypes().map(t=>`<option ${prevVal===t?'selected':''}>${t}</option>`).join('')+'<option value="__custom__">+ Add custom type…</option>';
+    if(prevVal===typeName)cfType.value='Email';
+  }
+  renderContent();
+  if(document.getElementById('view-calendar').classList.contains('active'))renderCalendar();
+}
+
+function renderCustomFieldRows(){
+  const wrap=document.getElementById('cf-custom-fields-list');
+  if(!currentCustomFields.length){
+    wrap.innerHTML=`<div style="font-size:12px;color:var(--text3)">No custom fields yet. Click "Add field" to track anything extra — e.g. landing page URL, UTM tag, approval owner.</div>`;
+    return;
+  }
+  wrap.innerHTML=currentCustomFields.map((f,i)=>`
+    <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+      <input placeholder="Field name" value="${f.key}" oninput="updateCustomField(${i},'key',this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;width:38%">
+      <input placeholder="Value" value="${f.value}" oninput="updateCustomField(${i},'value',this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;flex:1">
+      <button class="btn btn-ghost btn-sm" onclick="removeCustomFieldRow(${i})" type="button" style="color:var(--red)"><i class="ti ti-x"></i></button>
+    </div>
+  `).join('');
+}
+function addCustomFieldRow(){currentCustomFields.push({key:'',value:''});renderCustomFieldRows()}
+function updateCustomField(i,prop,val){currentCustomFields[i][prop]=val}
+function removeCustomFieldRow(i){currentCustomFields.splice(i,1);renderCustomFieldRows()}
+
+function deleteContent(id){content=content.filter(c=>c.id!==id);renderContent()}
+
+function saveContent(){
+  const title=document.getElementById('cf-title').value.trim();
+  if(!title)return;
+  let type=document.getElementById('cf-type').value;
+  if(type==='__custom__'){
+    const newType=document.getElementById('cf-custom-type-name').value.trim();
+    if(!newType){alert('Please name your custom content type.');return}
+    if(!customContentTypes.includes(newType)){customContentTypes.push(newType);saveCustomTypes();refreshTypeFilter();refreshCalendarTypeFilter()}
+    type=newType;
+  }
+  const cleanFields=currentCustomFields.filter(f=>f.key.trim()!=='');
+  const isSequence=type==='Email sequence step';
+
+  let data;
+  if(isSequence){
+    const status=document.getElementById('cf-status-seq').value;
+    // overall status: if every step has a date, treat as Scheduled (unless explicitly Draft/Needs approval/Published chosen); otherwise Draft
+    const allDated=currentSequenceSteps.length>0&&currentSequenceSteps.every(s=>s.date);
+    const anyDated=currentSequenceSteps.some(s=>s.date);
+    let computedStatus=status;
+    if(status==='Draft'&&anyDated)computedStatus='Scheduled';
+    data={title,type,biz:document.getElementById('cf-biz').value,notes:document.getElementById('cf-notes').value,status:computedStatus,date:'',time:'',tz:'',sequenceSteps:JSON.parse(JSON.stringify(currentSequenceSteps)),customFields:cleanFields};
+  }else{
+    const status=document.getElementById('cf-status').value;
+    let date=document.getElementById('cf-date').value;
+    let time=document.getElementById('cf-time').value;
+    if(status==='Scheduled'&&!date){alert('Please pick a calendar date to schedule this content.');return}
+    data={title,type,biz:document.getElementById('cf-biz').value,notes:document.getElementById('cf-notes').value,status,date,time,tz:time?selectedTz:'',sequenceSteps:[],customFields:cleanFields};
+  }
+
+  if(editContentId){Object.assign(content.find(c=>c.id===editContentId),data)}
+  else{content.push({id:nextContentId++,...data})}
+  closeModal();renderContent();
+}
+
+function formatTimeShort(time){
+  if(!time)return '';
+  const[h,m]=time.split(':');
+  const hh=parseInt(h,10);
+  const ampm=hh>=12?'p':'a';
+  const h12=hh%12===0?12:hh%12;
+  return h12+(m!=='00'?':'+m:'')+ampm;
+}
+
+/* ───────── CONTENT CALENDAR (reads from content[]) ───────── */
+function initCalendarFilters(){
+  const fb=document.getElementById('cal-filter-biz');
+  fb.innerHTML='<option value="">All businesses</option>'+BUSINESSES.map(b=>`<option>${b}</option>`).join('');
+  refreshCalendarTypeFilter();
+}
+function refreshCalendarTypeFilter(){
+  const ft=document.getElementById('cal-filter-type');
+  const prev=ft.value;
+  ft.innerHTML='<option value="">All types</option>'+allContentTypes().map(t=>`<option>${t}</option>`).join('');
+  ft.value=prev;
+}
+function calResetFilters(){
+  document.getElementById('cal-filter-biz').value='';
+  document.getElementById('cal-filter-type').value='';
+  renderCalendar();
+}
+
+let calYear=2026,calMonth=5; // June 2026, 0-indexed — matches dashboard "today"
+function calShiftMonth(delta){
+  calMonth+=delta;
+  if(calMonth<0){calMonth=11;calYear--}
+  if(calMonth>11){calMonth=0;calYear++}
+  renderCalendar();
+}
+function calGoToday(){calYear=2026;calMonth=5;renderCalendar()}
+
+function renderCalendar(){
+  const fb=document.getElementById('cal-filter-biz').value;
+  const ft=document.getElementById('cal-filter-type').value;
+  document.getElementById('cal-filter-indicator').style.display=(fb||ft)?'inline':'none';
+
+  const monthsFull=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent=monthsFull[calMonth]+' '+calYear;
+
+  let candidates=content.filter(c=>c.status==='Scheduled'||c.status==='Published');
+  if(fb)candidates=candidates.filter(c=>c.biz===fb);
+  if(ft)candidates=candidates.filter(c=>c.type===ft);
+
+  // flatten: regular items use their own date; sequence parents expand into one virtual entry per dated step
+  const byDate={};
+  candidates.forEach(c=>{
+    if(c.type==='Email sequence step'&&c.sequenceSteps&&c.sequenceSteps.length){
+      c.sequenceSteps.forEach(s=>{
+        if(!s.date)return;
+        (byDate[s.date]=byDate[s.date]||[]).push({
+          parentId:c.id,title:`${c.title} — Email ${s.step}`,biz:c.biz,type:c.type,status:c.status,
+          date:s.date,time:s.time,tz:s.tz,isSeqStep:true,stepNum:s.step,stepTotal:c.sequenceSteps.length
+        });
+      });
+    }else if(c.date){
+      byDate[c.date]=byDate[c.date]||[];
+      byDate[c.date].push({parentId:c.id,title:c.title,biz:c.biz,type:c.type,status:c.status,date:c.date,time:c.time,tz:c.tz,isSeqStep:false});
+    }
+  });
+
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const prevMonthDays=new Date(calYear,calMonth,0).getDate();
+  const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const colorMap={'Email':'blue','Social post':'green','Webinar promo':'purple','Email sequence step':'amber'};
+  const todayFull='2026-06-19';
+
+  let html=dayNames.map(d=>`<div class="cal-day-header">${d}</div>`).join('');
+
+  for(let i=firstDay-1;i>=0;i--){
+    html+=`<div class="cal-day other-month"><div class="cal-date">${prevMonthDays-i}</div></div>`;
+  }
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const items=(byDate[dateStr]||[]).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+    const isToday=dateStr===todayFull;
+    html+=`<div class="cal-day ${isToday?'today':''}">
+      <div class="cal-date">${d}</div>
+      ${items.map(c=>{
+        const isPublished=c.status==='Published';
+        const timeLabel=c.time?convertTimeForDisplay(c.date,c.time,c.tz)+' ':'';
+        const seqTag=c.isSeqStep?`<span style="opacity:.7"> (${c.stepNum}/${c.stepTotal})</span>`:'';
+        return `<div class="cal-event ${colorMap[c.type]||'blue'}" onclick="openContentModal(${c.parentId})" style="cursor:pointer${isPublished?';text-decoration:line-through;opacity:.55':''}" title="${c.title} — ${c.biz}${c.time?' — '+convertTimeForDisplay(c.date,c.time,c.tz)+' '+tzAbbrev(selectedTz):''}${isPublished?' — Published':''}">${isPublished?'<i class="ti ti-check" style="font-size:9px"></i> ':''}${timeLabel}${c.title}${seqTag}</div>`;
+      }).join('')}
+    </div>`;
+  }
+  const totalCells=firstDay+daysInMonth;
+  const remain=(7-(totalCells%7))%7;
+  for(let i=1;i<=remain;i++){
+    html+=`<div class="cal-day other-month"><div class="cal-date">${i}</div></div>`;
+  }
+  document.getElementById('cal-grid').innerHTML=html;
+}
+
+/* ───────── DASHBOARD SYNC ───────── */
+function syncDashboardFromTasks(){
+  const open=tasks.filter(t=>t.status!=='Done').length;
+  const overdue=tasks.filter(t=>isOverdue(t.due,t.status)).length;
+  const elT=document.getElementById('stat-tasks');
+  if(elT)elT.textContent=open;
+}
+
+/* ───────── MODAL GENERIC ───────── */
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open')}
+document.getElementById('modal-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('modal-overlay'))closeModal()});
+
+function openModal(type){
+  if(type==='new-note'){
+    document.getElementById('modal-title').textContent='New note';
+    document.getElementById('modal-body').innerHTML=`<div class="field" style="margin-bottom:10px"><label>Title</label><input placeholder="Note title"></div><div class="field"><label>Content</label><textarea rows="4" placeholder="Write your note…" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;width:100%;resize:vertical"></textarea></div>`;
+    document.getElementById('modal-footer').innerHTML=`<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="closeModal()">Save</button>`;
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+}
+
+/* ───────── PROJECTS ───────── */
+let projects=[
+  {id:1,name:'Monthly Webinar Series',biz:'Tech Startup',type:'Recurring',frequency:'Monthly',status:'Active',notes:'',
+    sessions:[
+      {id:101,name:'Session 1 — Jan',date:'2026-01-22',time:'09:00',link:'',registered:4,attended:3,noShow:1,attendees:[
+        {name:'Elena Ruiz',email:'elena@example.com',status:'attended'},
+        {name:'Jessica Park',email:'jessica@example.com',status:'attended'},
+        {name:'Hassan Ali',email:'hassan@example.com',status:'attended'},
+        {name:'James Okafor',email:'james@techco.io',status:'no-show'},
+      ]},
+      {id:102,name:'Session 2 — Feb',date:'2026-02-22',time:'09:00',link:'',registered:4,attended:3,noShow:1,attendees:[
+        {name:'Elena Ruiz',email:'elena@example.com',status:'attended'},
+        {name:'Jessica Park',email:'jessica@example.com',status:'attended'},
+        {name:'Hassan Ali',email:'hassan@example.com',status:'attended'},
+        {name:'Nadia Rahman',email:'nadia@gmail.com',status:'no-show'},
+      ]},
+      {id:103,name:'Session 3 — Mar',date:'2026-03-22',time:'09:00',link:'',registered:3,attended:2,noShow:1,attendees:[
+        {name:'Elena Ruiz',email:'elena@example.com',status:'attended'},
+        {name:'Jessica Park',email:'jessica@example.com',status:'attended'},
+        {name:'Hassan Ali',email:'hassan@example.com',status:'no-show'},
+      ]},
+      {id:104,name:'Session 4 — Apr',date:'2026-04-22',time:'09:00',link:'',registered:3,attended:3,noShow:0,attendees:[
+        {name:'Elena Ruiz',email:'elena@example.com',status:'attended'},
+        {name:'Jessica Park',email:'jessica@example.com',status:'attended'},
+        {name:'Hassan Ali',email:'hassan@example.com',status:'attended'},
+      ]},
+      {id:105,name:'Session 5 — May',date:'2026-05-22',time:'09:00',link:'',registered:2,attended:1,noShow:1,attendees:[
+        {name:'Elena Ruiz',email:'elena@example.com',status:'attended'},
+        {name:'Jessica Park',email:'jessica@example.com',status:'no-show'},
+      ]},
+      {id:106,name:'Session 6 — Jun',date:'2026-06-22',time:'09:00',link:'',registered:4,attended:0,noShow:0,attendees:[
+        {name:'Elena Ruiz',email:'elena@example.com',status:'registered'},
+        {name:'Jessica Park',email:'jessica@example.com',status:'registered'},
+        {name:'Sarah Johnson',email:'sarah@example.com',status:'registered'},
+        {name:'James Okafor',email:'james@techco.io',status:'registered'},
+      ]},
+    ]},
+  {id:2,name:'June Marketing Campaign',biz:'Retail Co',type:'One-time',frequency:'',status:'Active',notes:'',sessions:[]},
+  {id:3,name:'E-commerce Site Relaunch',biz:'E-commerce',type:'One-time',frequency:'',status:'At risk',notes:'',sessions:[]},
+];
+let nextProjectId=4;
+let nextSessionId=107;
+let currentProjectId=null;
+let currentSessionDetailId=null;
+let editProjectId=null;
+let editSessionId=null;
+let projectDetailTab='sessions';
+
+function initProjectFilters(){
+  const fb=document.getElementById('proj-filter-biz');
+  fb.innerHTML='<option value="">All businesses</option>'+BUSINESSES.map(b=>`<option>${b}</option>`).join('');
+}
+
+function getProject(id){return projects.find(p=>p.id===id)}
+
+function projectStatusBadge(status){
+  const map={'Active':'badge-green','Paused':'badge-gray','At risk':'badge-amber','Completed':'badge-blue'};
+  return `<span class="badge ${map[status]||'badge-gray'}">${status}</span>`;
+}
+
+function projectStats(p){
+  const totalSessions=p.sessions.length;
+  const doneSessions=p.sessions.filter(s=>s.date<todayStr()).length;
+  const totalRegistered=p.sessions.reduce((sum,s)=>sum+(s.registered||0),0);
+  const totalAttended=p.sessions.reduce((sum,s)=>sum+(s.attended||0),0);
+  const upcoming=p.sessions.filter(s=>s.date>=todayStr()).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const attendanceRate=totalRegistered?Math.round((totalAttended/totalRegistered)*100):0;
+  return {totalSessions,doneSessions,totalRegistered,totalAttended,upcoming,attendanceRate};
+}
+
+function renderProjects(){
+  const fb=document.getElementById('proj-filter-biz').value;
+  const fs=document.getElementById('proj-filter-status').value;
+  let filtered=projects.filter(p=>{
+    if(fb&&p.biz!==fb)return false;
+    if(fs&&p.status!==fs)return false;
+    return true;
+  });
+  if(!filtered.length){
+    document.getElementById('projects-list').innerHTML=`<div class="card" style="text-align:center;padding:40px;color:var(--text3);font-size:13px">
+      <i class="ti ti-folder-off" style="font-size:24px;display:block;margin-bottom:8px"></i>No projects match your filters.
+    </div>`;
+    return;
+  }
+  document.getElementById('projects-list').innerHTML=filtered.map(p=>{
+    const stats=projectStats(p);
+    const isRecurring=p.type==='Recurring';
+    return `<div class="card" style="cursor:pointer" onclick="openProjectDetail(${p.id})">
+      <div class="card-header">
+        <div>
+          <div class="card-title">${p.name}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">${p.type}${isRecurring&&p.frequency?' · '+p.frequency:''} · ${p.biz}</div>
+        </div>
+        ${projectStatusBadge(p.status)}
+      </div>
+      <div style="display:flex;gap:20px;font-size:12px;color:var(--text2);margin-bottom:10px">
+        ${isRecurring?`<span><i class="ti ti-video" style="margin-right:4px"></i>${stats.totalSessions} session${stats.totalSessions!==1?'s':''}</span>
+        <span><i class="ti ti-users" style="margin-right:4px"></i>${stats.totalRegistered} total registrants</span>
+        ${stats.totalRegistered?`<span><i class="ti ti-chart-bar" style="margin-right:4px"></i>${stats.attendanceRate}% avg attendance</span>`:''}`
+        :`<span><i class="ti ti-checkbox" style="margin-right:4px"></i>No sessions — one-time project</span>`}
+      </div>
+      ${stats.upcoming?`<div style="font-size:11px;color:var(--accent)"><i class="ti ti-calendar" style="font-size:12px"></i> Next: ${fmtDate(stats.upcoming.date)}</div>`:''}
+    </div>`;
+  }).join('');
+  if(typeof queueSave==='function')queueSave();
+}
+
+function openProjectDetail(id){
+  currentProjectId=id;
+  showView('project-detail');
+  renderProjectDetail();
+}
+
+function renderProjectDetail(){
+  const p=getProject(currentProjectId);
+  if(!p){showView('projects');return}
+  const stats=projectStats(p);
+  document.getElementById('pd-breadcrumb-name').textContent=p.name;
+  document.getElementById('pd-title').textContent=p.name;
+  document.getElementById('pd-subtitle').textContent=`${p.type}${p.type==='Recurring'&&p.frequency?' · '+p.frequency:''} · ${p.biz}`;
+  document.getElementById('pd-notes-text').value=p.notes||'';
+
+  document.getElementById('pd-stats').innerHTML=`
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Sessions</div><div style="font-size:24px;font-weight:600">${stats.totalSessions}</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Total registrants</div><div style="font-size:24px;font-weight:600">${stats.totalRegistered}</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Avg attendance</div><div style="font-size:24px;font-weight:600;color:var(--green)">${stats.attendanceRate}%</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Status</div><div style="margin-top:4px">${projectStatusBadge(p.status)}</div></div>
+  `;
+
+  renderSessionsList();
+  renderProjectContent();
+  renderProjectTasks();
+  if(typeof queueSave==='function')queueSave();
+}
+
+function setProjectDetailTab(tab){
+  projectDetailTab=tab;
+  ['sessions','content','tasks','notes'].forEach(t=>{
+    document.getElementById('pd-tab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('pd-panel-'+t).style.display=t===tab?'block':'none';
+  });
+}
+
+function renderSessionsList(){
+  const p=getProject(currentProjectId);
+  if(!p.sessions.length){
+    document.getElementById('pd-sessions-list').innerHTML=`<div class="card" style="text-align:center;padding:30px;color:var(--text3);font-size:13px">
+      <i class="ti ti-calendar-off" style="font-size:22px;display:block;margin-bottom:8px"></i>No sessions yet. Click "Add session" to schedule the first one.
+    </div>`;
+    return;
+  }
+  const sorted=[...p.sessions].sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('pd-sessions-list').innerHTML=sorted.map(s=>{
+    const isPast=s.date<todayStr();
+    const rate=s.registered?Math.round((s.attended/s.registered)*100):0;
+    return `<div class="card" style="cursor:pointer" onclick="openSessionDetail(${s.id})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--text)">${s.name}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">${fmtDate(s.date)}${s.time?' · '+convertTimeForDisplay(s.date,s.time,s.tz||selectedTz):''} ${isPast?'':'· <span style=\"color:var(--accent)\">Upcoming</span>'}</div>
+        </div>
+        <div style="display:flex;gap:6px" onclick="event.stopPropagation()">
+          <button class="btn btn-ghost btn-sm" onclick="openAttendanceModal(${s.id})"><i class="ti ti-users"></i> Attendance</button>
+          <button class="btn btn-ghost btn-sm" onclick="openSessionModal(${s.id})"><i class="ti ti-edit"></i></button>
+          <button class="btn btn-ghost btn-sm" onclick="deleteSession(${s.id})" style="color:var(--red)"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div style="display:flex;gap:20px;font-size:12px;color:var(--text2);margin-top:10px">
+        <span><i class="ti ti-user-plus" style="margin-right:4px"></i>${s.registered||0} registered</span>
+        <span style="color:var(--green)"><i class="ti ti-check" style="margin-right:4px"></i>${s.attended||0} attended</span>
+        <span style="color:var(--text3)"><i class="ti ti-x" style="margin-right:4px"></i>${s.noShow||0} no-show</span>
+        ${s.registered?`<span><i class="ti ti-chart-bar" style="margin-right:4px"></i>${rate}% rate</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openSessionDetail(sessionId){
+  currentSessionDetailId=sessionId;
+  showView('session-detail');
+  renderSessionDetail();
+}
+
+function renderSessionDetail(){
+  const p=getProject(currentProjectId);
+  if(!p)return;
+  const s=p.sessions.find(s=>s.id===currentSessionDetailId);
+  if(!s){showView('project-detail');return}
+
+  document.getElementById('sd-breadcrumb-project').textContent=p.name;
+  document.getElementById('sd-breadcrumb-session').textContent=s.name;
+  document.getElementById('sd-title').textContent=s.name;
+  document.getElementById('sd-subtitle').textContent=`${fmtDate(s.date)}${s.time?' · '+convertTimeForDisplay(s.date,s.time,s.tz||selectedTz):''} · ${p.name}`;
+
+  const rate=s.registered?Math.round((s.attended/s.registered)*100):0;
+  document.getElementById('sd-stats').innerHTML=`
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Registered</div><div style="font-size:24px;font-weight:600">${s.registered||0}</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Attended</div><div style="font-size:24px;font-weight:600;color:var(--green)">${s.attended||0}</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">No-show</div><div style="font-size:24px;font-weight:600;color:var(--text3)">${s.noShow||0}</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Attendance rate</div><div style="font-size:24px;font-weight:600;color:var(--accent)">${rate}%</div></div>
+  `;
+
+  const attendees=s.attendees||[];
+  if(!attendees.length){
+    document.getElementById('sd-attendees-body').innerHTML=`<tr><td colspan="3" style="text-align:center;padding:30px;color:var(--text3)">No registrants logged yet. Click "Edit attendance" to add them.</td></tr>`;
+    return;
+  }
+  document.getElementById('sd-attendees-body').innerHTML=attendees.map(a=>{
+    const badge=a.status==='attended'?'badge-green':a.status==='no-show'?'badge-gray':'badge-blue';
+    const c=getContactByEmail(a.email);
+    return `<tr ${c?`style="cursor:pointer" onclick="openContactDetail(${c.id})"`:''}>
+      <td class="td-main">${a.name||'—'}</td>
+      <td style="color:var(--text3)">${a.email||'—'}</td>
+      <td><span class="badge ${badge}">${a.status}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderProjectContent(){
+  const p=getProject(currentProjectId);
+  const linked=content.filter(c=>c.biz===p.biz);
+  if(!linked.length){
+    document.getElementById('pd-content-list').innerHTML=`No content linked yet. Content scheduled under <strong style="color:var(--text)">${p.biz}</strong> will show here automatically.`;
+    return;
+  }
+  document.getElementById('pd-content-list').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Title</th><th>Type</th><th>Status</th><th>Date</th></tr></thead><tbody>${linked.map(c=>`
+    <tr><td class="td-main">${c.title}</td><td><span class="badge ${typeBadgeColor(c.type)}">${c.type}</span></td><td><span class="badge ${c.status==='Published'?'badge-green':c.status==='Scheduled'?'badge-blue':'badge-gray'}">${c.status}</span></td><td>${c.date?fmtDate(c.date):'—'}</td></tr>
+  `).join('')}</tbody></table></div>`;
+}
+
+function renderProjectTasks(){
+  const p=getProject(currentProjectId);
+  const linked=tasks.filter(t=>t.biz===p.biz);
+  if(!linked.length){
+    document.getElementById('pd-tasks-list').innerHTML=`No tasks linked yet. Tasks under <strong style="color:var(--text)">${p.biz}</strong> will show here automatically.`;
+    return;
+  }
+  document.getElementById('pd-tasks-list').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Task</th><th>Status</th><th>Due</th><th>Assignee</th></tr></thead><tbody>${linked.map(t=>`
+    <tr><td class="td-main" style="${t.status==='Done'?'text-decoration:line-through;opacity:.6':''}">${t.name}</td><td><span class="badge ${t.status==='Done'?'badge-green':t.status==='In progress'?'badge-purple':'badge-blue'}">${t.status}</span></td><td>${fmtDate(t.due)}</td><td>${t.assign}</td></tr>
+  `).join('')}</tbody></table></div>`;
+}
+
+function saveProjectNotes(){
+  const p=getProject(currentProjectId);
+  if(p)p.notes=document.getElementById('pd-notes-text').value;
+}
+
+/* Project modal */
+function openProjectModal(id){
+  editProjectId=id||null;
+  const p=id?getProject(id):null;
+  document.getElementById('modal-title').textContent=p?'Edit project':'New project';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="field" style="margin-bottom:10px"><label>Project name</label><input id="pf-name" value="${p?p.name:''}" placeholder="e.g. Monthly Webinar Series"></div>
+    <div class="field-row">
+      <div class="field"><label>Business</label><select id="pf-biz">${BUSINESSES.map(b=>`<option ${p&&p.biz===b?'selected':''}>${b}</option>`).join('')}</select></div>
+      <div class="field"><label>Status</label><select id="pf-status">
+        ${['Active','Paused','At risk','Completed'].map(s=>`<option ${p&&p.status===s?'selected':(!p&&s==='Active'?'selected':'')}>${s}</option>`).join('')}
+      </select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Project type</label><select id="pf-type" onchange="onProjectTypeChange()">
+        <option ${!p||p.type==='Recurring'?'selected':''}>Recurring</option>
+        <option ${p&&p.type==='One-time'?'selected':''}>One-time</option>
+      </select></div>
+      <div class="field" id="pf-frequency-wrap"><label>Frequency</label><select id="pf-frequency">
+        ${['Weekly','Biweekly','Monthly'].map(f=>`<option ${p&&p.frequency===f?'selected':(!p&&f==='Monthly'?'selected':'')}>${f}</option>`).join('')}
+      </select></div>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML=`
+    ${p?'<button class="btn btn-ghost" onclick="deleteProjectConfirmFromModal('+p.id+')" style="margin-right:auto;color:var(--red)"><i class="ti ti-trash"></i> Delete</button>':''}
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveProject()">Save project</button>
+  `;
+  onProjectTypeChange();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function onProjectTypeChange(){
+  const isRecurring=document.getElementById('pf-type').value==='Recurring';
+  document.getElementById('pf-frequency-wrap').style.display=isRecurring?'flex':'none';
+}
+
+function saveProject(){
+  const name=document.getElementById('pf-name').value.trim();
+  if(!name)return;
+  const data={
+    name,
+    biz:document.getElementById('pf-biz').value,
+    status:document.getElementById('pf-status').value,
+    type:document.getElementById('pf-type').value,
+    frequency:document.getElementById('pf-type').value==='Recurring'?document.getElementById('pf-frequency').value:''
+  };
+  if(editProjectId){
+    Object.assign(getProject(editProjectId),data);
+  }else{
+    projects.push({id:nextProjectId++,...data,notes:'',sessions:[]});
+  }
+  closeModal();
+  renderProjects();
+  if(document.getElementById('view-project-detail').classList.contains('active'))renderProjectDetail();
+}
+
+function deleteProjectConfirm(){
+  if(!confirm('Delete this project and all its sessions? This cannot be undone.'))return;
+  projects=projects.filter(p=>p.id!==currentProjectId);
+  showView('projects');
+  renderProjects();
+}
+function deleteProjectConfirmFromModal(id){
+  if(!confirm('Delete this project and all its sessions? This cannot be undone.'))return;
+  projects=projects.filter(p=>p.id!==id);
+  closeModal();
+  renderProjects();
+  showView('projects');
+}
+
+/* Session modal */
+function openSessionModal(id){
+  editSessionId=id||null;
+  const p=getProject(currentProjectId);
+  const s=id?p.sessions.find(s=>s.id===id):null;
+  document.getElementById('modal-title').textContent=s?'Edit session':'Add session';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="field" style="margin-bottom:10px"><label>Session name</label><input id="sf-name" value="${s?s.name:''}" placeholder="e.g. Session 7 — July"></div>
+    <div class="field-row">
+      <div><label style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">Date</label><input type="date" id="sf-date" value="${s?s.date:''}"></div>
+      <div><label style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">Time</label><input type="time" id="sf-time" value="${s&&s.time?s.time:''}"></div>
+    </div>
+    <div class="field" style="margin:10px 0"><label>Zoom / meeting link</label><input id="sf-link" value="${s&&s.link?s.link:''}" placeholder="https://zoom.us/j/..."></div>
+    <div class="field-row">
+      <div class="field"><label>Registered</label><input type="number" id="sf-registered" min="0" value="${s?s.registered||0:0}"></div>
+      <div class="field"><label>Attended</label><input type="number" id="sf-attended" min="0" value="${s?s.attended||0:0}"></div>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML=`
+    ${s?'<button class="btn btn-ghost" onclick="deleteSession('+s.id+');closeModal()" style="margin-right:auto;color:var(--red)"><i class="ti ti-trash"></i> Delete</button>':''}
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveSession()">Save session</button>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function saveSession(){
+  const name=document.getElementById('sf-name').value.trim();
+  if(!name)return;
+  const p=getProject(currentProjectId);
+  const registered=parseInt(document.getElementById('sf-registered').value,10)||0;
+  const attended=parseInt(document.getElementById('sf-attended').value,10)||0;
+  const data={
+    name,
+    date:document.getElementById('sf-date').value,
+    time:document.getElementById('sf-time').value,
+    tz:document.getElementById('sf-time').value?selectedTz:'',
+    link:document.getElementById('sf-link').value.trim(),
+    registered,attended,
+    noShow:Math.max(0,registered-attended)
+  };
+  if(editSessionId){
+    const existing=p.sessions.find(s=>s.id===editSessionId);
+    Object.assign(existing,data);
+  }else{
+    p.sessions.push({id:nextSessionId++,...data,attendees:[]});
+  }
+  closeModal();
+  renderProjectDetail();
+  if(document.getElementById('view-session-detail').classList.contains('active'))renderSessionDetail();
+}
+
+function deleteSession(id){
+  const p=getProject(currentProjectId);
+  p.sessions=p.sessions.filter(s=>s.id!==id);
+  renderProjectDetail();
+}
+
+/* Attendance modal */
+function openAttendanceModal(sessionId){
+  const p=getProject(currentProjectId);
+  const s=p.sessions.find(s=>s.id===sessionId);
+  if(!s)return;
+  editSessionId=sessionId;
+  if(!s.attendees)s.attendees=[];
+  document.getElementById('modal-title').textContent='Attendance — '+s.name;
+  document.getElementById('modal-body').innerHTML=`
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Add registrants and mark who attended. Numbers update automatically.</div>
+    <div id="att-list" style="max-height:300px;overflow-y:auto;margin-bottom:10px"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addAttendeeRow()" type="button"><i class="ti ti-plus"></i> Add registrant</button>
+    <div style="display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px">
+      <span><i class="ti ti-user-plus" style="margin-right:4px"></i><span id="att-summary-reg">0</span> registered</span>
+      <span style="color:var(--green)"><i class="ti ti-check" style="margin-right:4px"></i><span id="att-summary-att">0</span> attended</span>
+      <span style="color:var(--text3)"><i class="ti ti-x" style="margin-right:4px"></i><span id="att-summary-no">0</span> no-show</span>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML=`
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveAttendance()">Save attendance</button>
+  `;
+  renderAttendeeRows(s.attendees);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function renderAttendeeRows(attendees){
+  document.getElementById('att-list').innerHTML=attendees.map((a,i)=>`
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+      <input placeholder="Name" value="${a.name||''}" oninput="updateAttendee(${i},'name',this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;width:32%">
+      <input placeholder="Email" value="${a.email||''}" oninput="updateAttendee(${i},'email',this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;flex:1">
+      <select onchange="updateAttendee(${i},'status',this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 8px;color:var(--text2);font-size:12px;font-family:'Inter',sans-serif">
+        <option value="registered" ${a.status==='registered'?'selected':''}>Registered</option>
+        <option value="attended" ${a.status==='attended'?'selected':''}>Attended</option>
+        <option value="no-show" ${a.status==='no-show'?'selected':''}>No-show</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="removeAttendeeRow(${i})" type="button" style="color:var(--red)"><i class="ti ti-x"></i></button>
+    </div>
+  `).join('');
+  updateAttendanceSummary(attendees);
+}
+
+let currentAttendees=[];
+function addAttendeeRow(){
+  const p=getProject(currentProjectId);
+  const s=p.sessions.find(s=>s.id===editSessionId);
+  s.attendees.push({name:'',email:'',status:'registered'});
+  renderAttendeeRows(s.attendees);
+}
+function updateAttendee(i,prop,val){
+  const p=getProject(currentProjectId);
+  const s=p.sessions.find(s=>s.id===editSessionId);
+  s.attendees[i][prop]=val;
+  updateAttendanceSummary(s.attendees);
+}
+function removeAttendeeRow(i){
+  const p=getProject(currentProjectId);
+  const s=p.sessions.find(s=>s.id===editSessionId);
+  s.attendees.splice(i,1);
+  renderAttendeeRows(s.attendees);
+}
+function updateAttendanceSummary(attendees){
+  const reg=attendees.length;
+  const att=attendees.filter(a=>a.status==='attended').length;
+  const no=attendees.filter(a=>a.status==='no-show').length;
+  document.getElementById('att-summary-reg').textContent=reg;
+  document.getElementById('att-summary-att').textContent=att;
+  document.getElementById('att-summary-no').textContent=no;
+}
+
+function saveAttendance(){
+  const p=getProject(currentProjectId);
+  const s=p.sessions.find(s=>s.id===editSessionId);
+  s.registered=s.attendees.length;
+  s.attended=s.attendees.filter(a=>a.status==='attended').length;
+  s.noShow=s.attendees.filter(a=>a.status==='no-show').length;
+  // sync each attendee into the Contacts list, so their session history shows up automatically
+  s.attendees.forEach(a=>{
+    if(a.email)findOrCreateContact(a.name,a.email,p.biz);
+  });
+  closeModal();
+  renderProjectDetail();
+  if(document.getElementById('view-session-detail').classList.contains('active'))renderSessionDetail();
+}
+
+/* ───────── CONTACTS ───────── */
+let contacts=[
+  {id:1,name:'Sarah Johnson',email:'sarah@example.com',biz:'Consulting Ltd',tags:['Lead']},
+  {id:2,name:'James Okafor',email:'james@techco.io',biz:'Tech Startup',tags:['Customer']},
+  {id:3,name:'Nadia Rahman',email:'nadia@gmail.com',biz:'Retail Co',tags:['Prospect']},
+  {id:4,name:'David Chen',email:'d.chen@realty.com',biz:'Real Estate',tags:['Lead']},
+];
+let nextContactId=5;
+let currentContactId=null;
+let editContactId=null;
+
+function initContactFilters(){
+  const fb=document.getElementById('contact-filter-biz');
+  if(!fb)return;
+  fb.innerHTML='<option value="">All businesses</option>'+BUSINESSES.map(b=>`<option>${b}</option>`).join('');
+}
+
+function getContact(id){return contacts.find(c=>c.id===id)}
+function getContactByEmail(email){return contacts.find(c=>c.email.toLowerCase()===email.toLowerCase())}
+
+/* find or create a contact by email, used when marking attendance */
+function findOrCreateContact(name,email,biz){
+  if(!email)return null;
+  let c=getContactByEmail(email);
+  if(!c){
+    c={id:nextContactId++,name:name||email,email,biz:biz||'',tags:[]};
+    contacts.push(c);
+  }
+  return c;
+}
+
+/* every session a contact attended/registered/no-showed, across every project */
+function getContactSessionHistory(email){
+  const history=[];
+  projects.forEach(p=>{
+    p.sessions.forEach(s=>{
+      const a=(s.attendees||[]).find(a=>a.email&&a.email.toLowerCase()===email.toLowerCase());
+      if(a)history.push({projectId:p.id,projectName:p.name,sessionId:s.id,sessionName:s.name,date:s.date,status:a.status});
+    });
+  });
+  return history.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+
+function renderContacts(){
+  const q=(document.getElementById('contact-search').value||'').toLowerCase();
+  const fb=document.getElementById('contact-filter-biz').value;
+  const filtered=contacts.filter(c=>{
+    if(q&&!(c.name.toLowerCase().includes(q)||c.email.toLowerCase().includes(q)||c.tags.some(t=>t.toLowerCase().includes(q))))return false;
+    if(fb&&c.biz!==fb)return false;
+    return true;
+  });
+  document.getElementById('contacts-table-body').innerHTML=filtered.map(c=>{
+    const history=getContactSessionHistory(c.email);
+    const attendedCount=history.filter(h=>h.status==='attended').length;
+    return `<tr style="cursor:pointer" onclick="openContactDetail(${c.id})">
+      <td class="td-main">${c.name}</td>
+      <td style="color:var(--text3)">${c.email}</td>
+      <td>${c.biz||'—'}</td>
+      <td>${c.tags.map(t=>`<span class="badge badge-purple">${t}</span>`).join(' ')}${history.length?` <span class="badge badge-blue">${attendedCount} session${attendedCount!==1?'s':''}</span>`:''}</td>
+      <td>${attendedCount}</td>
+      <td><span style="color:var(--text3);font-size:11px"><i class="ti ti-clock"></i> Not synced</span></td>
+    </tr>`;
+  }).join('');
+  if(typeof queueSave==='function')queueSave();
+}
+
+function openContactDetail(id){
+  currentContactId=id;
+  showView('contact-detail');
+  renderContactDetail();
+}
+
+function renderContactDetail(){
+  const c=getContact(currentContactId);
+  if(!c){showView('contacts');return}
+  document.getElementById('cd-breadcrumb-name').textContent=c.name;
+  document.getElementById('cd-title').textContent=c.name;
+  document.getElementById('cd-subtitle').textContent=`${c.email} · ${c.biz||'No business set'}`;
+
+  const history=getContactSessionHistory(c.email);
+  const attended=history.filter(h=>h.status==='attended').length;
+  const noShow=history.filter(h=>h.status==='no-show').length;
+  const projectsAttended=new Set(history.filter(h=>h.status==='attended').map(h=>h.projectId)).size;
+
+  document.getElementById('cd-stats').innerHTML=`
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Sessions attended</div><div style="font-size:24px;font-weight:600;color:var(--green)">${attended}</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">No-shows</div><div style="font-size:24px;font-weight:600;color:var(--text3)">${noShow}</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Projects engaged</div><div style="font-size:24px;font-weight:600">${projectsAttended}</div></div>
+  `;
+
+  const autoTags=history.filter(h=>h.status==='attended').map(h=>{
+    const d=new Date(h.date+'T00:00:00');
+    const monthsShort=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `Attended — ${h.projectName.split(' ')[0]} ${monthsShort[d.getMonth()]} ${d.getFullYear()}`;
+  });
+  document.getElementById('cd-tags').innerHTML=
+    c.tags.map(t=>`<span class="badge badge-purple">${t}</span>`).join('')+
+    autoTags.map(t=>`<span class="badge badge-blue"><i class="ti ti-tag" style="font-size:10px"></i> ${t}</span>`).join('');
+
+  if(!history.length){
+    document.getElementById('cd-sessions-table').innerHTML=`<div style="font-size:13px;color:var(--text3);padding:8px 0">No session history yet — this contact hasn't been marked in any session's attendance.</div>`;
+  }else{
+    document.getElementById('cd-sessions-table').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Project</th><th>Session</th><th>Date</th><th>Status</th></tr></thead><tbody>${history.map(h=>`
+      <tr><td class="td-main" style="cursor:pointer" onclick="openProjectDetail(${h.projectId})">${h.projectName}</td><td>${h.sessionName}</td><td>${fmtDate(h.date)}</td><td><span class="badge ${h.status==='attended'?'badge-green':h.status==='no-show'?'badge-gray':'badge-blue'}">${h.status}</span></td></tr>
+    `).join('')}</tbody></table></div>`;
+  }
+}
+
+function openContactModal(id){
+  editContactId=id||null;
+  const c=id?getContact(id):null;
+  document.getElementById('modal-title').textContent=c?'Edit contact':'New contact';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="field" style="margin-bottom:10px"><label>Name</label><input id="cof-name" value="${c?c.name:''}" placeholder="Full name"></div>
+    <div class="field" style="margin-bottom:10px"><label>Email</label><input id="cof-email" value="${c?c.email:''}" placeholder="email@example.com"></div>
+    <div class="field" style="margin-bottom:10px"><label>Business</label><select id="cof-biz">${BUSINESSES.map(b=>`<option ${c&&c.biz===b?'selected':''}>${b}</option>`).join('')}</select></div>
+    <div class="field"><label>Tags (comma separated)</label><input id="cof-tags" value="${c?c.tags.join(', '):''}" placeholder="Lead, Customer, VIP"></div>
+  `;
+  document.getElementById('modal-footer').innerHTML=`
+    ${c?'<button class="btn btn-ghost" onclick="deleteContactConfirmFromModal('+c.id+')" style="margin-right:auto;color:var(--red)"><i class="ti ti-trash"></i> Delete</button>':''}
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveContact()">Save contact</button>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function saveContact(){
+  const name=document.getElementById('cof-name').value.trim();
+  const email=document.getElementById('cof-email').value.trim();
+  if(!name||!email)return;
+  const tags=document.getElementById('cof-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const data={name,email,biz:document.getElementById('cof-biz').value,tags};
+  if(editContactId){Object.assign(getContact(editContactId),data)}
+  else{contacts.push({id:nextContactId++,...data})}
+  closeModal();
+  renderContacts();
+  if(document.getElementById('view-contact-detail').classList.contains('active'))renderContactDetail();
+}
+
+function deleteContactConfirm(){
+  if(!confirm('Delete this contact?'))return;
+  contacts=contacts.filter(c=>c.id!==currentContactId);
+  showView('contacts');
+  renderContacts();
+}
+function deleteContactConfirmFromModal(id){
+  if(!confirm('Delete this contact?'))return;
+  contacts=contacts.filter(c=>c.id!==id);
+  closeModal();
+  renderContacts();
+  showView('contacts');
+}
+
+/* ───────── CROSS-SESSION ATTENDANCE MATRIX ───────── */
+function openCrossSessionMatrix(){
+  showView('cross-session');
+  renderCrossSessionMatrix();
+}
+
+function renderCrossSessionMatrix(){
+  const p=getProject(currentProjectId);
+  if(!p)return;
+  document.getElementById('csm-title').textContent='Cross-session attendance — '+p.name;
+
+  const sorted=[...p.sessions].sort((a,b)=>a.date.localeCompare(b.date));
+  if(!sorted.length){
+    document.getElementById('csm-table').innerHTML=`<tr><td style="padding:30px;text-align:center;color:var(--text3);font-size:13px">No sessions yet for this project.</td></tr>`;
+    return;
+  }
+
+  // gather every unique attendee across all sessions, by email
+  const peopleMap={};
+  sorted.forEach(s=>{
+    (s.attendees||[]).forEach(a=>{
+      if(!a.email)return;
+      if(!peopleMap[a.email])peopleMap[a.email]={name:a.name||a.email,email:a.email,statuses:{}};
+      peopleMap[a.email].statuses[s.id]=a.status;
+    });
+  });
+  const people=Object.values(peopleMap).sort((a,b)=>a.name.localeCompare(b.name));
+
+  if(!people.length){
+    document.getElementById('csm-table').innerHTML=`<tr><td style="padding:30px;text-align:center;color:var(--text3);font-size:13px">No attendance data yet. Add registrants via "Attendance" on each session.</td></tr>`;
+    return;
+  }
+
+  const statusIcon={attended:'<i class="ti ti-check" style="color:var(--green)"></i>',registered:'<i class="ti ti-clock" style="color:var(--text3)"></i>','no-show':'<i class="ti ti-x" style="color:var(--red)"></i>'};
+
+  let html='<thead><tr><th style="position:sticky;left:0;background:var(--bg2);z-index:2">Contact</th>';
+  sorted.forEach(s=>{html+=`<th style="text-align:center;min-width:90px">${fmtDate(s.date)}<div style="font-weight:400;color:var(--text3);font-size:10px">${s.name}</div></th>`});
+  html+='<th style="text-align:center">Total attended</th></tr></thead><tbody>';
+
+  people.forEach(person=>{
+    const totalAttended=Object.values(person.statuses).filter(s=>s==='attended').length;
+    html+=`<tr><td class="td-main" style="position:sticky;left:0;background:var(--bg2);cursor:pointer" onclick="jumpToContactByEmail('${person.email.replace(/'/g,"\\'")}')">${person.name}<div style="font-size:11px;color:var(--text3);font-weight:400">${person.email}</div></td>`;
+    sorted.forEach(s=>{
+      const status=person.statuses[s.id];
+      html+=`<td style="text-align:center">${status?statusIcon[status]:'<span style="color:var(--text3)">—</span>'}</td>`;
+    });
+    html+=`<td style="text-align:center;font-weight:600;color:var(--green)">${totalAttended}</td></tr>`;
+  });
+  html+='</tbody>';
+  document.getElementById('csm-table').innerHTML=html;
+}
+
+function jumpToContactByEmail(email){
+  let c=getContactByEmail(email);
+  if(!c){
+    // auto-create a lightweight contact if one doesn't exist yet
+    const history=projects.flatMap(p=>p.sessions.flatMap(s=>(s.attendees||[]).filter(a=>a.email===email)));
+    c=findOrCreateContact(history[0]?.name,email,getProject(currentProjectId)?.biz);
+  }
+  openContactDetail(c.id);
+}
+
+function saveBackendUrl(){
+  const url=document.getElementById('backend-url-field').value.trim();
+  if(!url){alert('Please paste your Apps Script Web app URL first.');return}
+  setBackendUrl(url);
+  document.getElementById('ghl-webhook-display').textContent=url;
+  document.getElementById('ghl-webhook-display').style.color='var(--accent)';
+  loadFromBackend().then(()=>{
+    renderTasks();renderContent();renderProjects();renderContacts();
+    alert('Connected! Your data will now save automatically.');
+  });
+}
+
+async function testBackendConnection(){
+  const url=document.getElementById('backend-url-field').value.trim();
+  if(!url){alert('Paste your Apps Script URL first.');return}
+  setBackendUrl(url);
+  const ok=await loadFromBackend();
+  if(ok){
+    alert('Connection successful — backend is reachable and responding.');
+  }else{
+    alert('Could not reach that URL. Double check it was copied correctly from Apps Script → Deploy → Web app URL, and that "Who has access" is set to "Anyone".');
+  }
+}
+
+/* ───────── BACKEND SYNC (Google Apps Script) ───────── */
+let backendUrl=localStorage.getItem('cc_backend_url')||'https://script.google.com/macros/s/AKfycbyY9Y73hIyNj9Pyai5oWIYlzl9agXlfc6sqxibCNf_0LAeO1blItnjgCdfQpiQrW-E9XA/exec';
+let syncInProgress=false;
+let pendingSync=false;
+
+function setBackendUrl(url){
+  backendUrl=url.trim();
+  localStorage.setItem('cc_backend_url',backendUrl);
+}
+
+function updateSyncStatusUI(state){
+  const dot=document.getElementById('sync-status-dot');
+  const label=document.getElementById('sync-status-label');
+  if(!dot||!label)return;
+  const map={
+    'no-url':{color:'var(--text3)',text:'Not connected — local only'},
+    'syncing':{color:'var(--amber)',text:'Syncing…'},
+    'synced':{color:'var(--green)',text:'Saved to backend'},
+    'error':{color:'var(--red)',text:'Sync failed — check backend URL'},
+  };
+  const s=map[state]||map['no-url'];
+  dot.style.background=s.color;
+  label.textContent=s.text;
+}
+
+async function loadFromBackend(){
+  if(!backendUrl){updateSyncStatusUI('no-url');return false}
+  try{
+    updateSyncStatusUI('syncing');
+    const res=await fetch(backendUrl+'?action=load&sheet=Data');
+    const data=await res.json();
+    if(data.tasks)tasks=data.tasks;
+    if(data.content)content=data.content;
+    if(data.projects)projects=data.projects;
+    if(data.contacts)contacts=data.contacts;
+    if(data.customContentTypes)customContentTypes=data.customContentTypes;
+    updateSyncStatusUI('synced');
+    return true;
+  }catch(err){
+    updateSyncStatusUI('error');
+    return false;
+  }
+}
+
+async function saveToBackend(){
+  if(!backendUrl){updateSyncStatusUI('no-url');return}
+  if(syncInProgress){pendingSync=true;return}
+  syncInProgress=true;
+  updateSyncStatusUI('syncing');
+  try{
+    const payload={tasks,content,projects,contacts,customContentTypes};
+    const params=new URLSearchParams();
+    params.set('action','save');
+    params.set('sheet','Data');
+    params.set('data',JSON.stringify(payload));
+    await fetch(backendUrl,{method:'POST',body:params});
+    updateSyncStatusUI('synced');
+  }catch(err){
+    updateSyncStatusUI('error');
+  }
+  syncInProgress=false;
+  if(pendingSync){pendingSync=false;saveToBackend()}
+}
+
+/* debounce so rapid edits don't fire a request per keystroke */
+let saveTimer=null;
+function queueSave(){
+  if(saveTimer)clearTimeout(saveTimer);
+  saveTimer=setTimeout(saveToBackend,1200);
+}
+
+/* ───────── TIMEZONE CLOCK ───────── */
+const TIMEZONES=[
+  {label:'Eastern Time (EST/EDT)',tz:'America/New_York'},
+  {label:'Central Time (CST/CDT)',tz:'America/Chicago'},
+  {label:'Mountain Time (MST/MDT)',tz:'America/Denver'},
+  {label:'Pacific Time (PST/PDT)',tz:'America/Los_Angeles'},
+  {label:'Dhaka (BST)',tz:'Asia/Dhaka'},
+  {label:'London (GMT/BST)',tz:'Europe/London'},
+  {label:'Central Europe (CET/CEST)',tz:'Europe/Berlin'},
+  {label:'Dubai (GST)',tz:'Asia/Dubai'},
+  {label:'India (IST)',tz:'Asia/Kolkata'},
+  {label:'Singapore (SGT)',tz:'Asia/Singapore'},
+  {label:'Sydney (AEST/AEDT)',tz:'Australia/Sydney'},
+  {label:'UTC',tz:'UTC'},
+];
+let selectedTz=localStorage.getItem('cc_timezone')||'America/New_York';
+
+function initTzWidgets(){
+  ['sched','cal'].forEach(ctx=>{
+    const sel=document.getElementById('tz-select-'+ctx);
+    if(!sel)return;
+    sel.innerHTML=TIMEZONES.map(t=>`<option value="${t.tz}" ${t.tz===selectedTz?'selected':''}>${t.label}</option>`).join('');
+  });
+  tickClocks();
+  setInterval(tickClocks,1000);
+}
+
+function onTzChange(ctx){
+  const sel=document.getElementById('tz-select-'+ctx).value;
+  selectedTz=sel;
+  localStorage.setItem('cc_timezone',selectedTz);
+  ['sched','cal'].forEach(c=>{
+    const el=document.getElementById('tz-select-'+c);
+    if(el)el.value=selectedTz;
+  });
+  tickClocks();
+  renderContent();
+  renderCalendar();
+}
+
+function tickClocks(){
+  const now=new Date();
+  const opts={hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:selectedTz};
+  let timeStr;
+  try{timeStr=new Intl.DateTimeFormat('en-US',opts).format(now)}
+  catch(e){timeStr=now.toLocaleTimeString()}
+  ['sched','cal'].forEach(ctx=>{
+    const el=document.getElementById('tz-clock-time-'+ctx);
+    if(el)el.textContent=timeStr;
+  });
+}
+
+/* ───────── INIT ───────── */
+const h=new Date().getHours();
+const g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+document.getElementById('greeting').textContent=g+', Arif';
+const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const now=new Date();
+document.getElementById('today-date').textContent=days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+
+initTaskFilters();
+initContentFilters();
+initCalendarFilters();
+initTzWidgets();
+initProjectFilters();
+initContactFilters();
+
+(async function startup(){
+  if(backendUrl){
+    await loadFromBackend();
+  }
+  // sync seed/loaded session attendees into contacts so cross-session history shows immediately
+  projects.forEach(p=>{p.sessions.forEach(s=>{(s.attendees||[]).forEach(a=>{if(a.email)findOrCreateContact(a.name,a.email,p.biz)})})});
+  renderTasks();
+  renderContent();
+  renderProjects();
+  renderContacts();
+  refreshTypeFilter();
+  refreshCalendarTypeFilter();
+  const urlField=document.getElementById('backend-url-field');
+  if(urlField)urlField.value=backendUrl;
+  updateSyncStatusUI(backendUrl?'synced':'no-url');
+})();
+</script>
+</body>
+</html>
